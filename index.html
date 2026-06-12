@@ -400,7 +400,7 @@
   // ─── Backend URL ───────────────────────────────────────────────
   // Netlify injects BACKEND_URL at build time via netlify.toml [build.environment]
   // Falls back to empty string if not set.
-  const BACKEND_URL = (typeof __BACKEND_URL__ !== 'undefined' ? __BACKEND_URL__ : '').replace(/\/$/, '');
+  const BACKEND_URL = 'https://email-finder-backend.up.railway.app';
 
   const dot = document.getElementById('dot');
   const urlDisplay = document.getElementById('backend-url-display');
