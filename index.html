@@ -17,9 +17,6 @@
       --text:      #e8eaf0;
       --muted:     #6b7280;
       --valid:     #22c55e;
-      --invalid:   #ef4444;
-      --catchall:  #f59e0b;
-      --unknown:   #6b7280;
       --mono:      'JetBrains Mono', monospace;
       --sans:      'Inter', sans-serif;
     }
@@ -35,10 +32,7 @@
       padding: 48px 16px 80px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
+    header { text-align: center; margin-bottom: 48px; }
 
     header .eyebrow {
       font-family: var(--mono);
@@ -53,46 +47,12 @@
       font-size: 28px;
       font-weight: 600;
       letter-spacing: -0.02em;
-      color: var(--text);
     }
 
     header p {
       margin-top: 8px;
       font-size: 14px;
       color: var(--muted);
-    }
-
-    /* Backend status pill */
-    .backend-status {
-      width: 100%;
-      max-width: 520px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      font-family: var(--mono);
-    }
-
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--muted);
-      flex-shrink: 0;
-    }
-    .dot.connected { background: var(--valid); }
-    .dot.error     { background: var(--invalid); }
-
-    .backend-url-text {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     .card {
@@ -155,9 +115,7 @@
     }
 
     .btn-generate:hover { opacity: 0.88; }
-    .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Results */
     #results-section {
       width: 100%;
       max-width: 520px;
@@ -167,7 +125,6 @@
 
     .results-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
     }
@@ -180,22 +137,6 @@
       letter-spacing: 0.08em;
     }
 
-    .btn-verify-all {
-      padding: 7px 16px;
-      background: transparent;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      border-radius: 6px;
-      font-family: var(--sans);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .btn-verify-all:hover { background: var(--accent-dim); }
-    .btn-verify-all:disabled { opacity: 0.4; cursor: not-allowed; }
-
     .email-list { display: flex; flex-direction: column; gap: 8px; }
 
     .email-row {
@@ -207,17 +148,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      transition: border-color 0.2s;
     }
 
-    .email-row.status-valid   { border-color: var(--valid); }
-    .email-row.status-invalid { border-color: var(--invalid); }
-    .email-row.status-catchall{ border-color: var(--catchall); }
-
-    .email-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .email-info { flex: 1; min-width: 0; }
 
     .email-addr {
       font-family: var(--mono);
@@ -234,46 +167,6 @@
       margin-top: 2px;
     }
 
-    .row-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .status-badge {
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 9px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    .badge-idle    { background: #1c2029; color: var(--muted); }
-    .badge-checking{ background: #1a2540; color: var(--accent); }
-    .badge-valid   { background: #14532d; color: var(--valid); }
-    .badge-invalid { background: #450a0a; color: var(--invalid); }
-    .badge-catchall{ background: #451a03; color: var(--catchall); }
-    .badge-unknown { background: #1c2029; color: var(--muted); }
-
-    .btn-verify-single {
-      padding: 5px 10px;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 5px;
-      font-family: var(--sans);
-      font-size: 11px;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-
-    .btn-verify-single:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-verify-single:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    /* Copy button per row */
     .btn-copy-single {
       padding: 5px 10px;
       background: transparent;
@@ -288,12 +181,12 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      flex-shrink: 0;
     }
 
     .btn-copy-single:hover { border-color: var(--valid); color: var(--valid); }
     .btn-copy-single.copied { border-color: var(--valid); color: var(--valid); }
 
-    /* Copy All bar at bottom */
     .copy-all-bar {
       width: 100%;
       max-width: 520px;
@@ -319,17 +212,8 @@
       gap: 8px;
     }
 
-    .btn-copy-all:hover {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-      color: var(--accent);
-    }
-
-    .btn-copy-all.copied {
-      border-color: var(--valid);
-      background: #14532d33;
-      color: var(--valid);
-    }
+    .btn-copy-all:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+    .btn-copy-all.copied { border-color: var(--valid); background: #14532d33; color: var(--valid); }
 
     .copy-all-hint {
       text-align: center;
@@ -348,18 +232,11 @@
 <body>
 
   <header>
-    <div class="eyebrow">Lead Generation Tool</div>
-    <h1>Email Finder</h1>
-    <p>Generate every possible format, verify what's real.</p>
+    <div class="eyebrow">Made with ❤️ by Nexithon Night Shift</div>
+    <h1>Email Generator</h1>
+    <p>Generate every possible format for any name + domain.</p>
   </header>
 
-  <!-- Backend connection status (read-only, URL comes from env) -->
-  <div class="backend-status">
-    <span class="dot" id="dot"></span>
-    <span class="backend-url-text" id="backend-url-display">Checking backend…</span>
-  </div>
-
-  <!-- Input card -->
   <div class="card">
     <div class="fields">
       <div>
@@ -378,76 +255,40 @@
     <button class="btn-generate" onclick="generateEmails()">Generate Email Formats</button>
   </div>
 
-  <!-- Results -->
   <div id="results-section">
     <div class="results-header">
       <span id="results-count">0 formats</span>
-      <button class="btn-verify-all" id="btn-verify-all" onclick="verifyAll()">Verify All</button>
     </div>
     <div class="email-list" id="email-list"></div>
   </div>
 
-  <!-- Copy All bar -->
   <div class="copy-all-bar" id="copy-all-bar">
     <button class="btn-copy-all" id="btn-copy-all" onclick="copyAllEmails()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Copy All Emails — paste directly into To: field
     </button>
-    <div class="copy-all-hint">Copies as comma-separated list · works in Gmail, Outlook, Apple Mail</div>
+    <div class="copy-all-hint">Comma-separated · works in Gmail, Outlook, Apple Mail</div>
   </div>
 
 <script>
-  // ─── Backend URL ───────────────────────────────────────────────
-  // Netlify injects BACKEND_URL at build time via netlify.toml [build.environment]
-  // Falls back to empty string if not set.
-  const BACKEND_URL = 'https://email-finder-backend.up.railway.app';
-
-  const dot = document.getElementById('dot');
-  const urlDisplay = document.getElementById('backend-url-display');
-
-  async function checkBackend() {
-    if (!BACKEND_URL) {
-      urlDisplay.textContent = 'Backend URL not configured';
-      dot.className = 'dot error';
-      return;
-    }
-    urlDisplay.textContent = BACKEND_URL;
-    try {
-      const res = await fetch(`${BACKEND_URL}/health`);
-      const data = await res.json();
-      if (data.status === 'ok') {
-        dot.className = 'dot connected';
-      } else {
-        dot.className = 'dot error';
-      }
-    } catch {
-      dot.className = 'dot error';
-      urlDisplay.textContent = BACKEND_URL + ' (unreachable)';
-    }
-  }
-
-  checkBackend();
-
-  // ─── Email format generation ───────────────────────────────────
   function generateFormats(first, last, domain) {
     const f = first.toLowerCase();
     const l = last.toLowerCase();
     const fi = f[0];
     const li = l[0];
-
     return [
-      { format: 'firstname',            email: `${f}@${domain}` },
-      { format: 'lastname',             email: `${l}@${domain}` },
-      { format: 'firstname.lastname',   email: `${f}.${l}@${domain}` },
-      { format: 'firstnamelastname',    email: `${f}${l}@${domain}` },
-      { format: 'f.lastname',           email: `${fi}.${l}@${domain}` },
-      { format: 'flastname',            email: `${fi}${l}@${domain}` },
-      { format: 'firstnamel',           email: `${f}${li}@${domain}` },
-      { format: 'firstname_lastname',   email: `${f}_${l}@${domain}` },
-      { format: 'lastname.firstname',   email: `${l}.${f}@${domain}` },
-      { format: 'lastnamefirstname',    email: `${l}${f}@${domain}` },
-      { format: 'l.firstname',          email: `${li}.${f}@${domain}` },
-      { format: 'firstname-lastname',   email: `${f}-${l}@${domain}` },
+      { format: 'firstname',          email: `${f}@${domain}` },
+      { format: 'lastname',           email: `${l}@${domain}` },
+      { format: 'firstname.lastname', email: `${f}.${l}@${domain}` },
+      { format: 'firstnamelastname',  email: `${f}${l}@${domain}` },
+      { format: 'f.lastname',         email: `${fi}.${l}@${domain}` },
+      { format: 'flastname',          email: `${fi}${l}@${domain}` },
+      { format: 'firstnamel',         email: `${f}${li}@${domain}` },
+      { format: 'firstname_lastname', email: `${f}_${l}@${domain}` },
+      { format: 'lastname.firstname', email: `${l}.${f}@${domain}` },
+      { format: 'lastnamefirstname',  email: `${l}${f}@${domain}` },
+      { format: 'l.firstname',        email: `${li}.${f}@${domain}` },
+      { format: 'firstname-lastname', email: `${f}-${l}@${domain}` },
     ];
   }
 
@@ -467,7 +308,7 @@
     renderList();
     document.getElementById('results-section').style.display = 'block';
     document.getElementById('copy-all-bar').style.display = 'block';
-    // Reset copy-all button
+
     const btn = document.getElementById('btn-copy-all');
     btn.className = 'btn-copy-all';
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy All Emails — paste directly into To: field`;
@@ -477,138 +318,57 @@
     const list = document.getElementById('email-list');
     document.getElementById('results-count').textContent = `${emailData.length} formats`;
     list.innerHTML = '';
-
     emailData.forEach((item, i) => {
       const row = document.createElement('div');
       row.className = 'email-row';
-      row.id = `row-${i}`;
-
       row.innerHTML = `
         <div class="email-info">
           <div class="email-addr">${item.email}</div>
           <div class="email-format">${item.format}</div>
         </div>
-        <div class="row-actions">
-          <span class="status-badge badge-idle" id="badge-${i}">—</span>
-          <button class="btn-copy-single" id="copy-btn-${i}" onclick="copySingle(${i})" title="Copy email">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copy
-          </button>
-          <button class="btn-verify-single" id="btn-${i}" onclick="verifySingle(${i})">Check</button>
-        </div>
+        <button class="btn-copy-single" id="copy-btn-${i}" onclick="copySingle(${i})">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
       `;
       list.appendChild(row);
     });
   }
 
-  // ─── Copy single email ─────────────────────────────────────────
   async function copySingle(i) {
     const email = emailData[i].email;
     const btn = document.getElementById(`copy-btn-${i}`);
-    try {
-      await navigator.clipboard.writeText(email);
-      btn.classList.add('copied');
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Copied`;
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`;
-      }, 1800);
-    } catch {
-      // Fallback for older browsers
+    try { await navigator.clipboard.writeText(email); }
+    catch {
       const ta = document.createElement('textarea');
-      ta.value = email;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      btn.classList.add('copied');
-      btn.textContent = '✓ Copied';
-      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1800);
+      ta.value = email; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
     }
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Copied`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`;
+    }, 1800);
   }
 
-  // ─── Copy ALL emails (comma-separated for To: field) ──────────
   async function copyAllEmails() {
     if (!emailData.length) return;
-    const allEmails = emailData.map(e => e.email).join(', ');
+    const all = emailData.map(e => e.email).join(', ');
     const btn = document.getElementById('btn-copy-all');
-
-    try {
-      await navigator.clipboard.writeText(allEmails);
-    } catch {
+    try { await navigator.clipboard.writeText(all); }
+    catch {
       const ta = document.createElement('textarea');
-      ta.value = allEmails;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+      ta.value = all; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
     }
-
     btn.className = 'btn-copy-all copied';
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${emailData.length} emails copied — paste in To: field`;
-
     setTimeout(() => {
       btn.className = 'btn-copy-all';
       btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy All Emails — paste directly into To: field`;
     }, 3000);
   }
-
-  // ─── Verify single ─────────────────────────────────────────────
-  async function verifySingle(i) {
-    if (!BACKEND_URL) { alert('Backend URL configured nahi hai — deploy instructions check karo'); return; }
-
-    const badge = document.getElementById(`badge-${i}`);
-    const btn   = document.getElementById(`btn-${i}`);
-    const row   = document.getElementById(`row-${i}`);
-
-    btn.disabled = true;
-    badge.className = 'status-badge badge-checking';
-    badge.textContent = 'checking…';
-
-    try {
-      const res  = await fetch(`${BACKEND_URL}/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailData[i].email })
-      });
-      const data = await res.json();
-      applyStatus(row, badge, btn, data.status);
-    } catch (e) {
-      badge.className = 'status-badge badge-unknown';
-      badge.textContent = 'error';
-      btn.disabled = false;
-    }
-  }
-
-  async function verifyAll() {
-    if (!BACKEND_URL) { alert('Backend URL configured nahi hai'); return; }
-
-    document.getElementById('btn-verify-all').disabled = true;
-
-    for (let i = 0; i < emailData.length; i++) {
-      await verifySingle(i);
-      await sleep(600);
-    }
-
-    document.getElementById('btn-verify-all').disabled = false;
-  }
-
-  function applyStatus(row, badge, btn, status) {
-    const map = {
-      valid:    { cls: 'badge-valid',    label: '✓ valid',    row: 'status-valid'    },
-      invalid:  { cls: 'badge-invalid',  label: '✗ invalid',  row: 'status-invalid'  },
-      catchall: { cls: 'badge-catchall', label: '~ catch-all',row: 'status-catchall' },
-      unknown:  { cls: 'badge-unknown',  label: '? unknown',  row: ''                },
-    };
-    const m = map[status] || map.unknown;
-    badge.className = `status-badge ${m.cls}`;
-    badge.textContent = m.label;
-    if (m.row) row.classList.add(m.row);
-    btn.textContent = 'Recheck';
-    btn.disabled = false;
-  }
-
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
