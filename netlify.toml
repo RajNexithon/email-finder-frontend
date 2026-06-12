@@ -1,0 +1,8 @@
+[build]
+  command = "sed -i \"s|__BACKEND_URL__|$BACKEND_URL|g\" index.html"
+  publish = "."
+
+[build.environment]
+  # BACKEND_URL is set in Netlify dashboard → Site settings → Environment variables
+  # Example: https://email-finder-backend.up.railway.app
+  BACKEND_URL = ""
