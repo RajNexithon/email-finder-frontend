@@ -1,374 +1,221 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Email Finder</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #0d0f12;
-      --surface:   #161a20;
-      --border:    #252a33;
-      --accent:    #4f8eff;
-      --accent-dim:#1e3a6e;
-      --text:      #e8eaf0;
-      --muted:     #6b7280;
-      --valid:     #22c55e;
-      --mono:      'JetBrains Mono', monospace;
-      --sans:      'Inter', sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px 16px 80px;
-    }
-
-    header { text-align: center; margin-bottom: 48px; }
-
-    header .eyebrow {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    header h1 {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    header p {
-      margin-top: 8px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 28px;
-      width: 100%;
-      max-width: 520px;
-    }
-
-    .fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .field-full { grid-column: 1 / -1; }
-
-    label {
-      display: block;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 10px 13px;
-      font-family: var(--sans);
-      font-size: 14px;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    input:focus { border-color: var(--accent); }
-    input::placeholder { color: var(--muted); }
-
-    .btn-generate {
-      width: 100%;
-      margin-top: 4px;
-      padding: 12px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-
-    .btn-generate:hover { opacity: 0.88; }
-
-    #results-section {
-      width: 100%;
-      max-width: 520px;
-      margin-top: 24px;
-      display: none;
-    }
-
-    .results-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .results-header span {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .email-list { display: flex; flex-direction: column; gap: 8px; }
-
-    .email-row {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .email-info { flex: 1; min-width: 0; }
-
-    .email-addr {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .email-format {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .btn-copy-single {
-      padding: 5px 10px;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 5px;
-      font-family: var(--sans);
-      font-size: 11px;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .btn-copy-single:hover { border-color: var(--valid); color: var(--valid); }
-    .btn-copy-single.copied { border-color: var(--valid); color: var(--valid); }
-
-    .copy-all-bar {
-      width: 100%;
-      max-width: 520px;
-      margin-top: 16px;
-      display: none;
-    }
-
-    .btn-copy-all {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-copy-all:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
-    .btn-copy-all.copied { border-color: var(--valid); background: #14532d33; color: var(--valid); }
-
-    .copy-all-hint {
-      text-align: center;
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-      font-family: var(--mono);
-    }
-
-    @media (max-width: 480px) {
-      .fields { grid-template-columns: 1fr; }
-      .field-full { grid-column: 1; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Finder Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#f8fafc;
+--surface:rgba(255,255,255,.75);
+--text:#111827;
+--muted:#6b7280;
+--border:#e5e7eb;
+--primary:#4f46e5;
+--secondary:#7c3aed;
+--success:#10b981;
+}
+body.dark{
+--bg:#0f172a;
+--surface:rgba(30,41,59,.85);
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:#334155;
+}
+body{
+font-family:Inter,sans-serif;
+background:
+radial-gradient(circle at top left,#bfdbfe 0%,transparent 40%),
+radial-gradient(circle at bottom right,#ddd6fe 0%,transparent 40%),
+var(--bg);
+color:var(--text);
+min-height:100vh;
+padding:30px 16px;
+transition:.3s;
+}
+.container{max-width:900px;margin:auto}
+.header{text-align:center;margin-bottom:25px}
+.badge{
+display:inline-block;padding:8px 14px;border-radius:999px;
+background:rgba(79,70,229,.1);color:var(--primary);
+font-size:12px;font-weight:700;margin-bottom:12px
+}
+h1{font-size:3rem}
+.subtitle{color:var(--muted);margin-top:8px}
+.topbar{display:flex;justify-content:flex-end;margin-bottom:10px}
+.toggle{
+border:none;border-radius:12px;padding:10px 14px;
+cursor:pointer;color:#fff;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+}
+.card{
+background:var(--surface);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:24px;
+padding:24px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.full{grid-column:1/-1}
+label{display:block;margin-bottom:6px;font-size:13px;color:var(--muted)}
+input{
+width:100%;padding:14px;border-radius:14px;
+border:1px solid var(--border);
+background:transparent;color:var(--text);
+}
+input:focus{outline:none;border-color:var(--primary)}
+.btn{
+width:100%;margin-top:18px;padding:15px;
+border:none;border-radius:14px;color:#fff;
+font-weight:700;cursor:pointer;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+}
+.stats{
+display:none;
+grid-template-columns:repeat(3,1fr);
+gap:12px;margin-top:20px;
+}
+.stat{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:16px;padding:16px;text-align:center;
+}
+.results{margin-top:20px}
+.email-row{
+display:flex;justify-content:space-between;align-items:center;
+padding:14px;margin-bottom:10px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:14px;
+}
+.email-row:hover{transform:translateY(-2px)}
+.copy-btn,.copy-all{
+border:none;padding:10px 12px;border-radius:10px;cursor:pointer
+}
+.copy-all{
+width:100%;margin-top:15px;
+background:var(--success);color:white;font-weight:700;
+display:none;
+}
+@media(max-width:700px){
+.grid,.stats{grid-template-columns:1fr}
+h1{font-size:2rem}
+.email-row{flex-direction:column;gap:10px;align-items:flex-start}
+}
+</style>
 </head>
 <body>
+<div class="container">
+<div class="topbar">
+<button class="toggle" onclick="document.body.classList.toggle('dark')">🌙 Toggle Theme</button>
+</div>
 
-  <header>
-    <div class="eyebrow">Made with ❤️ by Nexithon Night Shift</div>
-    <h1>Email Generator</h1>
-    <p>Generate every possible format for any name + domain.</p>
-  </header>
+<div class="header">
+<div class="badge">Made ❤️ by Nexithon Night Shift</div>
+<h1>Email Finder Pro</h1>
+<p class="subtitle">Generate professional corporate email patterns instantly.</p>
+</div>
 
-  <div class="card">
-    <div class="fields">
-      <div>
-        <label>First Name</label>
-        <input type="text" id="first" placeholder="John" />
-      </div>
-      <div>
-        <label>Last Name</label>
-        <input type="text" id="last" placeholder="Doe" />
-      </div>
-      <div class="field-full">
-        <label>Company Domain</label>
-        <input type="text" id="domain" placeholder="xyzcompany.com" />
-      </div>
-    </div>
-    <button class="btn-generate" onclick="generateEmails()">Generate Email Formats</button>
-  </div>
+<div class="card">
+<div class="grid">
+<div>
+<label>First Name</label>
+<input id="first" placeholder="John">
+</div>
+<div>
+<label>Last Name</label>
+<input id="last" placeholder="Doe">
+</div>
+<div class="full">
+<label>Company Domain</label>
+<input id="domain" placeholder="company.com">
+</div>
+</div>
+<button class="btn" onclick="generateEmails()">Generate Email Formats</button>
+</div>
 
-  <div id="results-section">
-    <div class="results-header">
-      <span id="results-count">0 formats</span>
-    </div>
-    <div class="email-list" id="email-list"></div>
-  </div>
+<div class="stats" id="stats">
+<div class="stat"><h3 id="count">0</h3><small>Formats</small></div>
+<div class="stat"><h3>100%</h3><small>Free</small></div>
+<div class="stat"><h3>⚡</h3><small>Instant</small></div>
+</div>
 
-  <div class="copy-all-bar" id="copy-all-bar">
-    <button class="btn-copy-all" id="btn-copy-all" onclick="copyAllEmails()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      Copy All Emails — paste directly into To: field
-    </button>
-    <div class="copy-all-hint">Comma-separated · works in Gmail, Outlook, Apple Mail</div>
-  </div>
+<div class="results" id="results"></div>
+<button class="copy-all" id="copyAll" onclick="copyAllEmails()">Copy All Emails</button>
+
+</div>
 
 <script>
-  function generateFormats(first, last, domain) {
-    const f = first.toLowerCase();
-    const l = last.toLowerCase();
-    const fi = f[0];
-    const li = l[0];
-    return [
-      { format: 'firstname',          email: `${f}@${domain}` },
-      { format: 'lastname',           email: `${l}@${domain}` },
-      { format: 'firstname.lastname', email: `${f}.${l}@${domain}` },
-      { format: 'firstnamelastname',  email: `${f}${l}@${domain}` },
-      { format: 'f.lastname',         email: `${fi}.${l}@${domain}` },
-      { format: 'flastname',          email: `${fi}${l}@${domain}` },
-      { format: 'firstnamel',         email: `${f}${li}@${domain}` },
-      { format: 'firstname_lastname', email: `${f}_${l}@${domain}` },
-      { format: 'lastname.firstname', email: `${l}.${f}@${domain}` },
-      { format: 'lastnamefirstname',  email: `${l}${f}@${domain}` },
-      { format: 'l.firstname',        email: `${li}.${f}@${domain}` },
-      { format: 'firstname-lastname', email: `${f}-${l}@${domain}` },
-    ];
-  }
+let emailData=[];
 
-  let emailData = [];
+function generateFormats(first,last,domain){
+const f=first.toLowerCase();
+const l=last.toLowerCase();
+const fi=f[0];
+const li=l[0];
+return [
+`${f}@${domain}`,
+`${l}@${domain}`,
+`${f}.${l}@${domain}`,
+`${f}${l}@${domain}`,
+`${fi}.${l}@${domain}`,
+`${fi}${l}@${domain}`,
+`${f}${li}@${domain}`,
+`${f}_${l}@${domain}`,
+`${l}.${f}@${domain}`,
+`${l}${f}@${domain}`,
+`${li}.${f}@${domain}`,
+`${f}-${l}@${domain}`
+];
+}
 
-  function generateEmails() {
-    const first  = document.getElementById('first').value.trim();
-    const last   = document.getElementById('last').value.trim();
-    const domain = document.getElementById('domain').value.trim().replace(/^https?:\/\//, '');
+function generateEmails(){
+const first=document.getElementById('first').value.trim();
+const last=document.getElementById('last').value.trim();
+const domain=document.getElementById('domain').value.trim().replace(/^https?:\/\//,'');
 
-    if (!first || !last || !domain) {
-      alert('Teeno fields bharo — First Name, Last Name, Domain');
-      return;
-    }
+if(!first||!last||!domain){
+alert('Please fill all fields');
+return;
+}
 
-    emailData = generateFormats(first, last, domain);
-    renderList();
-    document.getElementById('results-section').style.display = 'block';
-    document.getElementById('copy-all-bar').style.display = 'block';
+emailData=generateFormats(first,last,domain);
 
-    const btn = document.getElementById('btn-copy-all');
-    btn.className = 'btn-copy-all';
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy All Emails — paste directly into To: field`;
-  }
+document.getElementById('stats').style.display='grid';
+document.getElementById('count').innerText=emailData.length;
 
-  function renderList() {
-    const list = document.getElementById('email-list');
-    document.getElementById('results-count').textContent = `${emailData.length} formats`;
-    list.innerHTML = '';
-    emailData.forEach((item, i) => {
-      const row = document.createElement('div');
-      row.className = 'email-row';
-      row.innerHTML = `
-        <div class="email-info">
-          <div class="email-addr">${item.email}</div>
-          <div class="email-format">${item.format}</div>
-        </div>
-        <button class="btn-copy-single" id="copy-btn-${i}" onclick="copySingle(${i})">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy
-        </button>
-      `;
-      list.appendChild(row);
-    });
-  }
+const results=document.getElementById('results');
+results.innerHTML='';
 
-  async function copySingle(i) {
-    const email = emailData[i].email;
-    const btn = document.getElementById(`copy-btn-${i}`);
-    try { await navigator.clipboard.writeText(email); }
-    catch {
-      const ta = document.createElement('textarea');
-      ta.value = email; document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-    }
-    btn.classList.add('copied');
-    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Copied`;
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`;
-    }, 1800);
-  }
+emailData.forEach((email,index)=>{
+results.innerHTML+=`
+<div class="email-row">
+<div>${email}</div>
+<button class="copy-btn" onclick="copySingle(${index})">Copy</button>
+</div>`;
+});
 
-  async function copyAllEmails() {
-    if (!emailData.length) return;
-    const all = emailData.map(e => e.email).join(', ');
-    const btn = document.getElementById('btn-copy-all');
-    try { await navigator.clipboard.writeText(all); }
-    catch {
-      const ta = document.createElement('textarea');
-      ta.value = all; document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-    }
-    btn.className = 'btn-copy-all copied';
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${emailData.length} emails copied — paste in To: field`;
-    setTimeout(() => {
-      btn.className = 'btn-copy-all';
-      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy All Emails — paste directly into To: field`;
-    }, 3000);
-  }
+document.getElementById('copyAll').style.display='block';
+}
+
+function copySingle(i){
+navigator.clipboard.writeText(emailData[i]);
+}
+
+function copyAllEmails(){
+navigator.clipboard.writeText(emailData.join(', '));
+const btn=document.getElementById('copyAll');
+btn.innerText='✅ Copied All Emails';
+setTimeout(()=>btn.innerText='Copy All Emails',2000);
+}
+
+document.addEventListener('keypress',e=>{
+if(e.key==='Enter') generateEmails();
+});
 </script>
 </body>
 </html>
