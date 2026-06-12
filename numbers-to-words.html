@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numbers to Words Converter</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+--bg:#f8fafc;
+--surface:rgba(255,255,255,.75);
+--text:#111827;
+--muted:#6b7280;
+--border:#e5e7eb;
+--primary:#4f46e5;
+--secondary:#7c3aed;
+--success:#10b981;
+}
+
+body.dark{
+--bg:#0f172a;
+--surface:rgba(30,41,59,.85);
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:#334155;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:
+radial-gradient(circle at top left,#bfdbfe 0%,transparent 40%),
+radial-gradient(circle at bottom right,#ddd6fe 0%,transparent 40%),
+var(--bg);
+color:var(--text);
+min-height:100vh;
+padding:30px 16px;
+transition:.3s;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.topbar{
+display:flex;
+justify-content:flex-end;
+margin-bottom:10px;
+}
+
+.toggle{
+border:none;
+border-radius:12px;
+padding:10px 14px;
+cursor:pointer;
+color:#fff;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+}
+
+.nav-card{
+background:var(--surface);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:20px;
+padding:15px;
+margin-bottom:20px;
+}
+
+.nav-links{
+display:flex;
+justify-content:center;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.nav-links a{
+text-decoration:none;
+padding:10px 16px;
+border-radius:12px;
+border:1px solid var(--border);
+color:var(--text);
+font-weight:600;
+transition:.3s;
+}
+
+.nav-links a:hover{
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+color:#fff;
+border-color:transparent;
+}
+
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.badge{
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+background:rgba(79,70,229,.1);
+color:var(--primary);
+font-size:12px;
+font-weight:700;
+margin-bottom:12px;
+}
+
+h1{
+font-size:3rem;
+}
+
+.subtitle{
+color:var(--muted);
+margin-top:8px;
+}
+
+.layout{
+display:grid;
+grid-template-columns:400px 1fr;
+gap:20px;
+}
+
+.card{
+background:var(--surface);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:24px;
+padding:24px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+font-weight:600;
+}
+
+input,select{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:1px solid var(--border);
+background:transparent;
+color:var(--text);
+margin-bottom:15px;
+}
+
+.radio-group{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-bottom:15px;
+}
+
+.radio-group label{
+font-weight:500;
+cursor:pointer;
+}
+
+.btns{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.btn{
+flex:1;
+border:none;
+padding:14px;
+border-radius:14px;
+cursor:pointer;
+font-weight:700;
+color:white;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+}
+
+.result{
+margin-top:20px;
+padding:15px;
+border-radius:14px;
+border:1px solid var(--border);
+min-height:120px;
+white-space:pre-wrap;
+line-height:1.7;
+}
+
+.info{
+line-height:1.8;
+color:var(--muted);
+}
+
+@media(max-width:900px){
+
+.layout{
+grid-template-columns:1fr;
+}
+
+h1{
+font-size:2rem;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topbar">
+<button class="toggle"
+onclick="document.body.classList.toggle('dark')">
+🌙 Toggle Theme
+</button>
+</div>
+
+<div class="nav-card">
+<div class="nav-links">
+<a href="index.html">📧 Email Finder</a>
+<a href="convert-case.html">🔤 Convert Case</a>
+<a href="numbers-to-words.html">🔢 Numbers to Words</a>
+</div>
+</div>
+
+<div class="header">
+
+<div class="badge">
+Made with ❤️ by Nexithon Night Shift
+</div>
+
+<h1>Numbers to Words Converter</h1>
+
+<p class="subtitle">
+Convert numbers into words, currency and check writing format instantly.
+</p>
+
+</div>
+
+<div class="layout">
+
+<div class="card">
+
+<label>Convert this Number</label>
+
+<input
+type="number"
+id="numberInput"
+placeholder="63000"
+>
+
+<label>Convert To</label>
+
+<div class="radio-group">
+
+<label>
+<input type="radio"
+name="mode"
+value="words"
+checked>
+ Words
+</label>
+
+<label>
+<input type="radio"
+name="mode"
+value="currency">
+ Currency
+</label>
+
+<label>
+<input type="radio"
+name="mode"
+value="check">
+ Check Writing
+</label>
+
+</div>
+
+<label>Letter Case</label>
+
+<select id="caseType">
+<option value="title">Title Case</option>
+<option value="sentence">Sentence Case</option>
+<option value="lower">lower case</option>
+<option value="upper">UPPER CASE</option>
+</select>
+
+<div class="btns">
+
+<button
+class="btn"
+onclick="convertNumber()">
+Calculate
+</button>
+
+<button
+class="btn"
+onclick="clearAll()">
+Clear
+</button>
+
+</div>
+
+<div class="result" id="result">
+Your result will appear here...
+</div>
+
+<div class="btns">
+
+<button
+class="btn"
+onclick="copyResult()">
+📋 Copy
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2 style="margin-bottom:15px;">
+About this Tool
+</h2>
+
+<div class="info">
+
+Convert numbers into words using the
+US numbering system.
+
+Examples:
+
+<br><br>
+
+<b>63,000</b><br>
+Sixty Three Thousand
+
+<br><br>
+
+<b>1,250,500</b><br>
+One Million Two Hundred Fifty Thousand Five Hundred
+
+<br><br>
+
+Supports:
+
+<ul style="margin-left:20px;margin-top:10px;">
+<li>Words</li>
+<li>Currency Format</li>
+<li>Check Writing Format</li>
+<li>Title Case</li>
+<li>Sentence Case</li>
+<li>UPPERCASE</li>
+<li>lowercase</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const ones=[
+'',
+'One',
+'Two',
+'Three',
+'Four',
+'Five',
+'Six',
+'Seven',
+'Eight',
+'Nine',
+'Ten',
+'Eleven',
+'Twelve',
+'Thirteen',
+'Fourteen',
+'Fifteen',
+'Sixteen',
+'Seventeen',
+'Eighteen',
+'Nineteen'
+];
+
+const tens=[
+'',
+'',
+'Twenty',
+'Thirty',
+'Forty',
+'Fifty',
+'Sixty',
+'Seventy',
+'Eighty',
+'Ninety'
+];
+
+function convertHundreds(num){
+
+let str='';
+
+if(num>99){
+str+=ones[Math.floor(num/100)]+' Hundred ';
+num%=100;
+}
+
+if(num>19){
+str+=tens[Math.floor(num/10)]+' ';
+num%=10;
+}
+
+if(num>0){
+str+=ones[num]+' ';
+}
+
+return str.trim();
+
+}
+
+function numberToWords(num){
+
+if(num===0) return 'Zero';
+
+const units=[
+'',
+'Thousand',
+'Million',
+'Billion',
+'Trillion'
+];
+
+let words='';
+let i=0;
+
+while(num>0){
+
+let chunk=num%1000;
+
+if(chunk){
+words=
+convertHundreds(chunk)
++' '
++units[i]
++' '
++words;
+}
+
+num=Math.floor(num/1000);
+i++;
+
+}
+
+return words.trim();
+
+}
+
+function applyCase(text){
+
+const type=
+document.getElementById('caseType').value;
+
+if(type==='upper')
+return text.toUpperCase();
+
+if(type==='lower')
+return text.toLowerCase();
+
+if(type==='sentence')
+return text.charAt(0).toUpperCase()
++ text.slice(1).toLowerCase();
+
+return text;
+
+}
+
+function convertNumber(){
+
+const value=
+document.getElementById('numberInput').value;
+
+if(!value){
+alert('Please enter a number');
+return;
+}
+
+const num=parseInt(value);
+
+const mode=
+document.querySelector(
+'input[name="mode"]:checked'
+).value;
+
+let output='';
+
+if(mode==='words'){
+
+output=numberToWords(num);
+
+}
+
+if(mode==='currency'){
+
+output=
+numberToWords(num)
++' Dollars';
+
+}
+
+if(mode==='check'){
+
+output=
+numberToWords(num)
++' and 00/100 Dollars';
+
+}
+
+output=applyCase(output);
+
+document.getElementById('result')
+.innerText=output;
+
+}
+
+function copyResult(){
+
+navigator.clipboard.writeText(
+document.getElementById('result').innerText
+);
+
+}
+
+function clearAll(){
+
+document.getElementById('numberInput').value='';
+
+document.getElementById('result').innerText=
+'Your result will appear here...';
+
+}
+
+</script>
+
+</body>
+</html>
