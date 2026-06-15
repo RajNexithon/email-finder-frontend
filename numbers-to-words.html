@@ -263,7 +263,8 @@ Convert numbers into words, currency and check writing format instantly.
 <input
 type="number"
 id="numberInput"
-placeholder="63000"
+step="0.01"
+placeholder="insert number"
 >
 
 <label>Convert To</label>
@@ -498,7 +499,7 @@ return text;
 
 function convertNumber(){
 
-const value=
+const value =
 document.getElementById('numberInput').value;
 
 if(!value){
@@ -506,9 +507,12 @@ alert('Please enter a number');
 return;
 }
 
-const num=parseInt(value);
+const num = parseFloat(value);
 
-const mode=
+const dollars = Math.floor(num);
+const cents = Math.round((num - dollars) * 100);
+
+const mode =
 document.querySelector(
 'input[name="mode"]:checked'
 ).value;
@@ -517,38 +521,43 @@ let output='';
 
 if(mode==='words'){
 
-output=numberToWords(num);
+output = numberToWords(dollars);
+
+if(cents>0){
+output += ' Point ' + numberToWords(cents);
+}
 
 }
 
 if(mode==='currency'){
 
-output=
-numberToWords(num)
-+' Dollars';
+output =
+numberToWords(dollars)
++ ' Dollars';
+
+if(cents>0){
+output +=
+' and '
++ numberToWords(cents)
++ ' Cents';
+}
 
 }
 
 if(mode==='check'){
 
-output=
-numberToWords(num)
-+' and 00/100 Dollars';
+output =
+numberToWords(dollars)
++ ' and '
++ cents.toString().padStart(2,'0')
++ '/100 Dollars';
 
 }
 
-output=applyCase(output);
+output = applyCase(output);
 
-document.getElementById('result')
-.innerText=output;
-
-}
-
-function copyResult(){
-
-navigator.clipboard.writeText(
-document.getElementById('result').innerText
-);
+document.getElementById('result').innerText =
+output;
 
 }
 
