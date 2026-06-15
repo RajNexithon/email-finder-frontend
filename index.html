@@ -282,6 +282,16 @@ select{cursor:pointer;appearance:auto}
   background:var(--primary-light);color:var(--primary-text);
   white-space:nowrap;flex-shrink:0;font-weight:600;
 }
+.email-priority{
+  font-size:9px;font-family:Inter,sans-serif;
+  padding:2px 6px;border-radius:4px;
+  white-space:nowrap;flex-shrink:0;font-weight:700;
+  letter-spacing:.3px;
+}
+.email-priority.high{background:rgba(16,185,129,.15);color:#059669;}
+.email-priority.medium{background:rgba(245,158,11,.12);color:#d97706;}
+.email-priority.low{background:rgba(100,116,139,.1);color:#64748b;}
+.email-row.top-pattern{background:rgba(16,185,129,.04);border-left:3px solid var(--primary);}
 .email-addr{font-size:13px;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .copy-sm{
   width:30px;height:30px;display:flex;align-items:center;justify-content:center;
@@ -650,7 +660,10 @@ async function copyToClipboard(text){try{await navigator.clipboard.writeText(tex
 
 /* ===== EMAIL FINDER ===== */
 let emailData=[];
-const patternLabels=['firstname','lastname','firstname.lastname','firstnamelastname','f.lastname','flastname','firstnamel','firstname_lastname','lastname.firstname','lastnamefirstname','l.firstname','firstname-lastname'];
+// Priority order based on Hunter.io / Prospeo.io data
+// High: ~48-56% of 1000+ employee companies | Medium: ~15-30% | Low: <10%
+const patternLabels=['firstname.lastname','f.lastname','firstname','flastname','firstnamelastname','firstnamel','firstname.l','lastname.firstname','l.firstname','firstname_lastname','lastnamefirstname','f.l','fl','firstname-lastname','lastname_firstname','lastname','f_lastname','f-lastname','lastname_f','lastname-f','lf','lastnamef','lastname-firstname'];
+const patternPriority=['high','high','high','high','medium','medium','medium','medium','medium','medium','medium','medium','medium','low','low','low','low','low','low','low','low','low','low'];
 
 function generateEmails(){
   const first=document.getElementById('ef-first').value.trim();
@@ -658,22 +671,27 @@ function generateEmails(){
   let domain=document.getElementById('ef-domain').value.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/+$/,'');
   if(!first||!last||!domain){showToast('Missing fields','Please fill in all fields.','info');return}
   const f=first.toLowerCase(),l=last.toLowerCase(),fi=f[0],li=l[0];
-  emailData=[`${f}@${domain}`,`${l}@${domain}`,`${f}.${l}@${domain}`,`${f}${l}@${domain}`,`${fi}.${l}@${domain}`,`${fi}${l}@${domain}`,`${f}${li}@${domain}`,`${f}_${l}@${domain}`,`${l}.${f}@${domain}`,`${l}${f}@${domain}`,`${li}.${f}@${domain}`,`${f}-${l}@${domain}`];
+  // Ordered by Hunter.io priority: most common corporate patterns first
+  emailData=[`${f}.${l}@${domain}`,`${fi}.${l}@${domain}`,`${f}@${domain}`,`${fi}${l}@${domain}`,`${f}${l}@${domain}`,`${f}${li}@${domain}`,`${f}.${li}@${domain}`,`${l}.${f}@${domain}`,`${li}.${f}@${domain}`,`${f}_${l}@${domain}`,`${l}${f}@${domain}`,`${fi}.${li}@${domain}`,`${fi}${li}@${domain}`,`${f}-${l}@${domain}`,`${l}_${f}@${domain}`,`${l}@${domain}`,`${fi}_${l}@${domain}`,`${fi}-${l}@${domain}`,`${l}_${fi}@${domain}`,`${l}-${fi}@${domain}`,`${li}${fi}@${domain}`,`${l}${fi}@${domain}`,`${l}-${f}@${domain}`];
   document.getElementById('ef-stats').style.display='block';
   document.getElementById('ef-stats').innerHTML=`Found <strong>${emailData.length}</strong> email patterns for <strong>${first} ${last}</strong>`;
   const container=document.getElementById('ef-results');
   container.style.display='block';
-  container.innerHTML=emailData.map((email,i)=>`
-    <div class="email-row" style="animation:panelIn .3s ease ${i*.03}s both">
+  container.innerHTML=emailData.map((email,i)=>{
+    const prio=patternPriority[i];
+    const prioLabel=prio==='high'?'🔥 HIGH':prio==='medium'?'⭐ MID':'💡 LOW';
+    const topClass=prio==='high'?' top-pattern':'';
+    return `<div class="email-row${topClass}" style="animation:panelIn .3s ease ${i*.03}s both">
       <div class="email-left">
+        <span class="email-priority ${prio}">${prioLabel}</span>
         <span class="email-pattern">${patternLabels[i]}</span>
         <span class="email-addr">${email}</span>
       </div>
       <button class="copy-sm" onclick="copyEmail(${i})" title="Copy">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       </button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   document.getElementById('ef-copyAll').style.display='inline-flex';
 }
 
