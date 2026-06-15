@@ -3,255 +3,835 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Email Finder Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Nexitool Pro — Email Finder, Case Converter & More</title>
+<meta name="description" content="Professional online tools: Email Pattern Finder, Text Case Converter, and Numbers to Words Converter. Free, fast, and privacy-first.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
 :root{
---bg:#f8fafc;
---surface:rgba(255,255,255,.75);
---text:#111827;
---muted:#6b7280;
---border:#e5e7eb;
---primary:#4f46e5;
---secondary:#7c3aed;
---success:#10b981;
+  --bg:#f8fafc;
+  --surface:rgba(255,255,255,.82);
+  --surface-solid:#fff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --border-hover:#cbd5e1;
+  --primary:#10b981;
+  --primary-hover:#059669;
+  --primary-glow:rgba(16,185,129,.15);
+  --primary-light:rgba(16,185,129,.07);
+  --primary-text:#059669;
+  --violet:#8b5cf6;
+  --violet-glow:rgba(139,92,246,.15);
+  --violet-light:rgba(139,92,246,.07);
+  --violet-text:#7c3aed;
+  --amber:#f59e0b;
+  --amber-glow:rgba(245,158,11,.15);
+  --amber-light:rgba(245,158,11,.07);
+  --amber-text:#d97706;
+  --red:#ef4444;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.05);
+  --shadow-md:0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:0 16px 40px rgba(0,0,0,.07);
+  --transition:all .25s cubic-bezier(.4,0,.2,1);
 }
 body.dark{
---bg:#0f172a;
---surface:rgba(30,41,59,.85);
---text:#f8fafc;
---muted:#94a3b8;
---border:#334155;
+  --bg:#0c1222;
+  --surface:rgba(22,33,62,.82);
+  --surface-solid:#162040;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --border:#1e2d4a;
+  --border-hover:#2a3f6a;
+  --primary-glow:rgba(16,185,129,.2);
+  --primary-light:rgba(16,185,129,.1);
+  --primary-text:#34d399;
+  --violet-glow:rgba(139,92,246,.2);
+  --violet-light:rgba(139,92,246,.1);
+  --violet-text:#a78bfa;
+  --amber-glow:rgba(245,158,11,.2);
+  --amber-light:rgba(245,158,11,.1);
+  --amber-text:#fbbf24;
+  --shadow:0 1px 3px rgba(0,0,0,.15);
+  --shadow-md:0 4px 12px rgba(0,0,0,.2);
+  --shadow-lg:0 16px 40px rgba(0,0,0,.25);
 }
+
 body{
-font-family:Inter,sans-serif;
-background:
-radial-gradient(circle at top left,#bfdbfe 0%,transparent 40%),
-radial-gradient(circle at bottom right,#ddd6fe 0%,transparent 40%),
-var(--bg);
-color:var(--text);
-min-height:100vh;
-padding:30px 16px;
-transition:.3s;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  transition:background .4s,color .4s;
+  overflow-x:hidden;
 }
-.container{max-width:900px;margin:auto}
-.header{text-align:center;margin-bottom:25px}
-.badge{
-display:inline-block;padding:8px 14px;border-radius:999px;
-background:rgba(79,70,229,.1);color:var(--primary);
-font-size:12px;font-weight:700;margin-bottom:12px
+
+/* ===== ANIMATED BG ===== */
+.bg-glow{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;overflow:hidden;
 }
-h1{font-size:3rem}
-.subtitle{color:var(--muted);margin-top:8px}
-.topbar{display:flex;justify-content:flex-end;margin-bottom:10px}
-.toggle{
-border:none;border-radius:12px;padding:10px 14px;
-cursor:pointer;color:#fff;
-background:linear-gradient(135deg,var(--primary),var(--secondary));
+.bg-glow .orb{
+  position:absolute;border-radius:50%;filter:blur(100px);
+  animation:orbFloat 20s ease-in-out infinite;
 }
+.bg-glow .orb-1{
+  width:600px;height:600px;top:-200px;left:-100px;
+  background:var(--primary-glow);animation-delay:0s;
+}
+.bg-glow .orb-2{
+  width:500px;height:500px;bottom:-150px;right:-100px;
+  background:var(--violet-glow);animation-delay:-7s;
+}
+.bg-glow .orb-3{
+  width:400px;height:400px;top:40%;left:50%;
+  background:var(--amber-glow);animation-delay:-14s;opacity:.5;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(40px,-30px) scale(1.05)}
+  50%{transform:translate(-20px,40px) scale(.95)}
+  75%{transform:translate(30px,20px) scale(1.02)}
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:var(--transition);
+}
+.navbar-inner{
+  max-width:1400px;width:100%;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:56px;
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.brand-icon{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;background:linear-gradient(135deg,#10b981,#06b6d4);
+  box-shadow:0 2px 8px rgba(16,185,129,.3);
+  transition:var(--transition);
+}
+.brand-icon:hover{transform:scale(1.1);box-shadow:0 4px 16px rgba(16,185,129,.4)}
+.brand-icon svg{width:18px;height:18px}
+.brand-text{font-size:18px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--text),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.theme-btn{
+  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--text);cursor:pointer;
+  transition:var(--transition);
+}
+.theme-btn:hover{background:var(--border);border-color:var(--border-hover);transform:rotate(15deg)}
+.theme-btn svg{width:18px;height:18px}
+
+/* ===== HERO ===== */
+.hero{
+  text-align:center;padding:32px 24px 20px;position:relative;z-index:1;
+}
+.hero h1{
+  font-size:30px;font-weight:800;letter-spacing:-.7px;line-height:1.15;
+  animation:slideUp .6s ease;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#10b981,#06b6d4,#8b5cf6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{
+  margin-top:8px;color:var(--muted);font-size:15px;
+  max-width:560px;margin-left:auto;margin-right:auto;
+  animation:slideUp .6s ease .1s both;
+}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== TABS ===== */
+.tabs{
+  max-width:1400px;width:100%;margin:0 auto;
+  padding:0 24px 48px;flex:1;position:relative;z-index:1;
+  text-align:center;
+}
+.tab-list{
+  display:inline-flex;gap:4px;
+  background:var(--surface);backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:12px;padding:4px;margin-bottom:20px;
+  box-shadow:var(--shadow);
+  margin-left:auto;margin-right:auto;
+}
+.tab-btn{
+  padding:10px 20px;border:none;border-radius:9px;
+  background:transparent;color:var(--muted);
+  font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+  display:flex;align-items:center;gap:7px;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{
+  background:var(--surface-solid);color:var(--text);
+  box-shadow:var(--shadow-md);
+}
+.tab-btn svg{width:16px;height:16px}
+.tab-panel{display:none;animation:panelIn .35s ease}
+.tab-panel.active{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== CARD ===== */
 .card{
-background:var(--surface);
-backdrop-filter:blur(20px);
-border:1px solid var(--border);
-border-radius:24px;
-padding:24px;
-box-shadow:0 20px 40px rgba(0,0,0,.08);
+  background:var(--surface);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:24px;box-shadow:var(--shadow-lg);
+  overflow:hidden;transition:var(--transition);
 }
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.full{grid-column:1/-1}
-label{display:block;margin-bottom:6px;font-size:13px;color:var(--muted)}
-input{
-width:100%;padding:14px;border-radius:14px;
-border:1px solid var(--border);
-background:transparent;color:var(--text);
+.card:hover{box-shadow:0 20px 50px rgba(0,0,0,.08)}
+.card-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.card-icon{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  border-radius:14px;flex-shrink:0;
+  transition:var(--transition);
 }
-input:focus{outline:none;border-color:var(--primary)}
+.card-icon:hover{transform:scale(1.08)}
+.card-icon svg{width:22px;height:22px}
+.card-icon.emerald{background:var(--primary-light);color:var(--primary-text);box-shadow:0 2px 12px var(--primary-glow)}
+.card-icon.violet{background:var(--violet-light);color:var(--violet-text);box-shadow:0 2px 12px var(--violet-glow)}
+.card-icon.amber{background:var(--amber-light);color:var(--amber-text);box-shadow:0 2px 12px var(--amber-glow)}
+.card-title{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.card-desc{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* ===== FORM ===== */
+label.field-label{
+  display:block;font-size:12px;font-weight:600;
+  color:var(--muted);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+input[type="text"],input[type="number"],select{
+  width:100%;display:block;padding:11px 14px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--surface-solid);color:var(--text);
+  font-family:inherit;font-size:14px;
+  transition:var(--transition);
+}
+input[type="text"]:focus,input[type="number"]:focus,select:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+textarea{
+  resize:vertical;min-height:220px;
+  font-family:'Inter',monospace;font-size:14px;
+  padding:16px 24px;
+  width:calc(100% + 48px);margin-left:-24px;margin-right:-24px;margin-top:12px;
+  border-radius:0;border-left:none;border-right:none;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--surface-solid);color:var(--text);
+  display:block;transition:var(--transition);
+}
+textarea:focus{
+  outline:none;border-color:var(--violet);
+  box-shadow:0 0 0 3px var(--violet-glow);
+}
+select{cursor:pointer;appearance:auto}
+
+/* ===== BUTTONS ===== */
 .btn{
-width:100%;margin-top:18px;padding:15px;
-border:none;border-radius:14px;color:#fff;
-font-weight:700;cursor:pointer;
-background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 20px;border:none;border-radius:10px;
+  font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
 }
-.stats{
-display:none;
-grid-template-columns:repeat(3,1fr);
-gap:12px;margin-top:20px;
+.btn svg{width:15px;height:15px}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 2px 8px var(--primary-glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--primary-glow)}
+.btn-primary:active{transform:translateY(0)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--border);border-color:var(--border-hover)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid transparent}
+.btn-ghost:hover{color:var(--red);background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--border)}
+.btn-danger:hover{background:rgba(239,68,68,.08);border-color:var(--red)}
+
+/* ===== GRID ===== */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){
+  .grid-3,.grid-2{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .card{padding:16px}
+  textarea{width:calc(100% + 32px);margin-left:-16px;margin-right:-16px;padding:14px 16px}
+  .tabs{padding:0 12px 32px}
+  .navbar-inner{padding:0 16px}
 }
-.stat{
-background:var(--surface);
-border:1px solid var(--border);
-border-radius:16px;padding:16px;text-align:center;
-}
-.results{margin-top:20px}
+
+/* ===== EMAIL FINDER ===== */
 .email-row{
-display:flex;justify-content:space-between;align-items:center;
-padding:14px;margin-bottom:10px;
-background:var(--surface);
-border:1px solid var(--border);
-border-radius:14px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-radius:10px;transition:var(--transition);
 }
-.email-row:hover{transform:translateY(-2px)}
-.copy-btn,.copy-all{
-border:none;padding:10px 12px;border-radius:10px;cursor:pointer
+.email-row:hover{background:var(--primary-light)}
+.email-row+.email-row{border-top:1px solid var(--border)}
+.email-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.email-pattern{
+  font-size:10px;font-family:monospace;
+  padding:3px 8px;border-radius:6px;
+  background:var(--primary-light);color:var(--primary-text);
+  white-space:nowrap;flex-shrink:0;font-weight:600;
 }
-.copy-all{
-width:100%;margin-top:15px;
-background:var(--success);color:white;font-weight:700;
-display:none;
+.email-addr{font-size:13px;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy-sm{
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border:none;border-radius:8px;background:transparent;color:var(--muted);
+  cursor:pointer;transition:var(--transition);flex-shrink:0;opacity:0;
 }
-@media(max-width:700px){
-.grid,.stats{grid-template-columns:1fr}
-h1{font-size:2rem}
-.email-row{flex-direction:column;gap:10px;align-items:flex-start}
-}
-.nav-card{
-background:var(--surface);
-backdrop-filter:blur(20px);
-border:1px solid var(--border);
-border-radius:20px;
-padding:15px;
-margin-bottom:20px;
-box-shadow:0 10px 20px rgba(0,0,0,.05);
-}
+.copy-sm svg{width:14px;height:14px}
+.email-row:hover .copy-sm{opacity:1}
+.copy-sm:hover{background:var(--primary-light);color:var(--primary-text)}
+.email-stats{font-size:13px;color:var(--muted);margin-top:10px}
+.email-stats strong{color:var(--text)}
+.email-list{margin-top:12px;border:1px solid var(--border);border-radius:14px;overflow:hidden;max-height:340px;overflow-y:auto}
+.copied-flash{animation:flash .4s ease}
+@keyframes flash{0%{background:var(--primary-light)}100%{background:transparent}}
 
-.nav-links{
-display:flex;
-justify-content:center;
-gap:12px;
-flex-wrap:wrap;
+/* ===== CASE CONVERTER ===== */
+.text-stats{
+  display:flex;gap:16px;flex-wrap:wrap;
+  margin-top:10px;font-size:12px;color:var(--muted);
 }
+.text-stats strong{color:var(--text)}
+.case-row{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;
+}
+.case-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border:1px solid var(--border);border-radius:8px;
+  background:transparent;color:var(--text);font-family:inherit;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:var(--transition);white-space:nowrap;
+}
+.case-btn svg{width:14px;height:14px;color:var(--muted)}
+.case-btn:hover{background:var(--violet-light);border-color:var(--violet);transform:translateY(-1px)}
+.case-btn:active{transform:translateY(0)}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 
-.nav-links a{
-text-decoration:none;
-padding:10px 16px;
-border-radius:12px;
-border:1px solid var(--border);
-color:var(--text);
-font-weight:600;
-transition:.3s;
+/* ===== NUMBERS TO WORDS ===== */
+.num-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:768px){.num-layout{grid-template-columns:1fr}}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--text);font-family:inherit;
+  cursor:pointer;transition:var(--transition);
 }
+.mode-btn svg{width:16px;height:16px}
+.mode-btn .mode-label{font-size:11px;font-weight:600}
+.mode-btn:hover{background:var(--amber-light);border-color:var(--amber)}
+.mode-btn.active{background:var(--amber-light);border-color:var(--amber);color:var(--amber-text);box-shadow:0 2px 8px var(--amber-glow)}
+.result-box{
+  border:1px solid var(--border);border-radius:14px;
+  background:var(--surface-solid);padding:18px;
+  min-height:120px;font-size:14px;line-height:1.7;font-weight:500;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:var(--transition);
+}
+.result-box.empty{
+  background:transparent;border-style:dashed;color:var(--muted);
+  font-weight:400;align-items:center;justify-content:center;
+}
+.result-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--border);
+}
+.result-badge{
+  font-size:10px;padding:3px 10px;border-radius:6px;
+  background:var(--amber-light);color:var(--amber-text);font-weight:600;
+}
+.result-copy{
+  display:flex;align-items:center;gap:5px;
+  border:none;border-radius:8px;background:transparent;
+  color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;
+  transition:var(--transition);
+}
+.result-copy svg{width:14px;height:14px}
+.result-copy:hover{color:var(--text)}
 
-.nav-links a:hover{
-background:linear-gradient(135deg,var(--primary),var(--secondary));
-color:#fff;
-border-color:transparent;
+/* ===== TOAST ===== */
+.toast-container{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  display:flex;flex-direction:column;gap:10px;
 }
+.toast{
+  background:var(--surface-solid);border:1px solid var(--border);
+  border-radius:14px;padding:14px 18px;
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
+  font-size:13px;max-width:320px;
+  display:flex;align-items:flex-start;gap:10px;
+  animation:toastIn .35s cubic-bezier(.4,0,.2,1);
+}
+.toast.out{animation:toastOut .25s ease forwards}
+.toast-icon{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:var(--primary-light);color:var(--primary-text);
+}
+.toast-icon svg{width:14px;height:14px}
+.toast-body{flex:1}
+.toast-title{font-weight:700;font-size:13px}
+.toast-desc{color:var(--muted);font-size:12px;margin-top:2px}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(10px) scale(.95)}}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--border);
+  background:var(--surface);backdrop-filter:blur(12px);
+  padding:20px;text-align:center;position:relative;z-index:1;
+}
+.footer-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:13px;color:var(--muted);
+}
+.footer-heart{color:#ef4444;animation:heartbeat 1.5s ease infinite}
+@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* ===== SCROLL ===== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+
+/* ===== PARTICLE (subtle) ===== */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="topbar">
-<button class="toggle" onclick="document.body.classList.toggle('dark')">🌙 Toggle Theme</button>
-</div>
-<div class="nav-card">
-<div class="nav-links">
-<a href="index.html">📧 Email Finder</a>
-<a href="convert-case.html">🔤 Convert Case</a>
-<a href="numbers-to-words.html">🔢 Numbers to Words</a>
-</div>
-</div>
-<div class="header">
-<div class="badge">Made with ❤️ by Nexithon Night Shift</div>
-<h1>Email Finder Pro</h1>
-<p class="subtitle">Generate professional corporate email patterns instantly.</p>
+
+<!-- ANIMATED BG -->
+<div class="bg-glow">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 </div>
 
-<div class="card">
-<div class="grid">
-<div>
-<label>First Name</label>
-<input id="first" placeholder="John">
-</div>
-<div>
-<label>Last Name</label>
-<input id="last" placeholder="Doe">
-</div>
-<div class="full">
-<label>Company Domain</label>
-<input id="domain" placeholder="company.com">
-</div>
-</div>
-<button class="btn" onclick="generateEmails()">Generate Email Formats</button>
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <span class="brand-text">Nexitool Pro</span>
+    </a>
+    <div class="nav-actions">
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
+        <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Professional Online <span>Text & Email Tools</span></h1>
+  <p>Find email patterns, convert text cases, and transform numbers to words — all in one place, right in your browser.</p>
+</section>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab-list">
+    <button class="tab-btn active" onclick="switchTab('email')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email Finder
+    </button>
+    <button class="tab-btn" onclick="switchTab('case')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      Case Converter
+    </button>
+    <button class="tab-btn" onclick="switchTab('numbers')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+      Num to Words
+    </button>
+  </div>
+
+  <!-- EMAIL FINDER -->
+  <div class="tab-panel active" id="panel-email">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon emerald">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="card-title">Email Pattern Finder</div>
+          <div class="card-desc">Generate common corporate email formats instantly</div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div>
+          <label class="field-label">First Name</label>
+          <input type="text" id="ef-first" placeholder="John">
+        </div>
+        <div>
+          <label class="field-label">Last Name</label>
+          <input type="text" id="ef-last" placeholder="Doe">
+        </div>
+        <div>
+          <label class="field-label">Company Domain</label>
+          <input type="text" id="ef-domain" placeholder="company.com">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="generateEmails()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Generate Patterns
+        </button>
+        <button class="btn btn-outline" id="ef-copyAll" onclick="copyAllEmails()" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy All
+        </button>
+        <button class="btn btn-ghost" onclick="clearEmailFinder()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Clear
+        </button>
+      </div>
+      <div id="ef-stats" class="email-stats" style="display:none"></div>
+      <div id="ef-results" class="email-list" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- CASE CONVERTER -->
+  <div class="tab-panel" id="panel-case">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon violet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        </div>
+        <div>
+          <div class="card-title">Text Case Converter</div>
+          <div class="card-desc">Transform text between different cases instantly</div>
+        </div>
+      </div>
+      <textarea id="cc-text" placeholder="Type or paste your text here..."></textarea>
+      <div class="text-stats">
+        <span><strong id="cc-chars">0</strong> chars</span>
+        <span><strong id="cc-words">0</strong> words</span>
+        <span><strong id="cc-lines">0</strong> lines</span>
+        <span><strong id="cc-sentences">0</strong> sentences</span>
+      </div>
+      <div class="case-row">
+        <button class="case-btn" onclick="convertCase('sentence')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"/><path d="M9 4l-5 16"/><path d="M15 4l5 16"/></svg>Sentence</button>
+        <button class="case-btn" onclick="convertCase('lower')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"/><path d="M7 14v-3a5 5 0 0 1 10 0v3"/></svg>lower</button>
+        <button class="case-btn" onclick="convertCase('upper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"/><path d="M7 10v-3a5 5 0 0 1 10 0v3"/></svg>UPPER</button>
+        <button class="case-btn" onclick="convertCase('capitalized')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>Capitalized</button>
+        <button class="case-btn" onclick="convertCase('title')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>Title</button>
+        <button class="case-btn" onclick="convertCase('alternating')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 3 4 21"/><polyline points="16 3 20 21"/></svg>aLtErNaTiNg</button>
+        <button class="case-btn" onclick="convertCase('inverse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5"/><path d="M3 11V9a4 4 0 0 1 4-4h4"/><polyline points="7 23 3 19"/><path d="M21 13v2a4 4 0 0 1-4 4h-4"/></svg>InVeRsE</button>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-outline" onclick="copyText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="btn btn-outline" onclick="downloadText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="btn btn-danger" onclick="clearText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUMBERS TO WORDS -->
+  <div class="tab-panel" id="panel-numbers">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        </div>
+        <div>
+          <div class="card-title">Numbers to Words</div>
+          <div class="card-desc">Convert numbers to words, currency or check format</div>
+        </div>
+      </div>
+      <div class="num-layout">
+        <div>
+          <label class="field-label">Number</label>
+          <input type="number" id="nw-input" placeholder="e.g. 1250.50" style="font-size:16px;font-family:monospace;margin-bottom:14px" min="0" step="any">
+          <label class="field-label">Conversion Mode</label>
+          <div class="mode-grid" style="margin-bottom:14px">
+            <button class="mode-btn active" onclick="setNumMode(this,'words')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+              <span class="mode-label">Words</span>
+            </button>
+            <button class="mode-btn" onclick="setNumMode(this,'currency')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span class="mode-label">Currency</span>
+            </button>
+            <button class="mode-btn" onclick="setNumMode(this,'check')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <span class="mode-label">Check</span>
+            </button>
+          </div>
+          <label class="field-label">Output Case</label>
+          <select id="nw-case">
+            <option value="title">Title Case</option>
+            <option value="sentence">Sentence Case</option>
+            <option value="lower">lower case</option>
+            <option value="upper">UPPER CASE</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Result</label>
+          <div class="result-box empty" id="nw-result">Enter a number to see the conversion</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="stats" id="stats">
-<div class="stat"><h3 id="count">0</h3><small>Formats</small></div>
-<div class="stat"><h3>100%</h3><small>Free</small></div>
-<div class="stat"><h3>⚡</h3><small>Instant</small></div>
-</div>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Made with</span>
+    <span class="footer-heart">❤️</span>
+    <span>by Bhanwar Singh</span>
+  </div>
+</footer>
 
-<div class="results" id="results"></div>
-<button class="copy-all" id="copyAll" onclick="copyAllEmails()">Copy All Emails</button>
-
-</div>
+<!-- TOAST -->
+<div class="toast-container" id="toasts"></div>
 
 <script>
-let emailData=[];
-
-function generateFormats(first,last,domain){
-const f=first.toLowerCase();
-const l=last.toLowerCase();
-const fi=f[0];
-const li=l[0];
-return [
-`${f}@${domain}`,
-`${l}@${domain}`,
-`${f}.${l}@${domain}`,
-`${f}${l}@${domain}`,
-`${fi}.${l}@${domain}`,
-`${fi}${l}@${domain}`,
-`${f}${li}@${domain}`,
-`${f}_${l}@${domain}`,
-`${l}.${f}@${domain}`,
-`${l}${f}@${domain}`,
-`${li}.${f}@${domain}`,
-`${f}-${l}@${domain}`
-];
+/* ===== THEME ===== */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const dark=document.body.classList.contains('dark');
+  document.getElementById('icon-moon').style.display=dark?'none':'block';
+  document.getElementById('icon-sun').style.display=dark?'block':'none';
+  localStorage.setItem('nexitool-theme',dark?'dark':'light');
 }
+(function initTheme(){
+  const saved=localStorage.getItem('nexitool-theme');
+  if(saved==='dark'||(!saved&&window.matchMedia('(prefers-color-scheme:dark)').matches)){
+    document.body.classList.add('dark');
+    document.getElementById('icon-moon').style.display='none';
+    document.getElementById('icon-sun').style.display='block';
+  }
+})();
+
+/* ===== TABS ===== */
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers'][i]===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+/* ===== TOAST ===== */
+function showToast(title,desc,icon){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');t.className='toast';
+  const svg=icon==='check'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+  t.innerHTML=`<div class="toast-icon">${svg}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),250)},2800);
+}
+
+/* ===== CLIPBOARD ===== */
+async function copyToClipboard(text){try{await navigator.clipboard.writeText(text);return true}catch{return false}}
+
+/* ===== EMAIL FINDER ===== */
+let emailData=[];
+const patternLabels=['firstname','lastname','firstname.lastname','firstnamelastname','f.lastname','flastname','firstnamel','firstname_lastname','lastname.firstname','lastnamefirstname','l.firstname','firstname-lastname'];
 
 function generateEmails(){
-const first=document.getElementById('first').value.trim();
-const last=document.getElementById('last').value.trim();
-const domain=document.getElementById('domain').value.trim().replace(/^https?:\/\//,'');
-
-if(!first||!last||!domain){
-alert('Please fill all fields');
-return;
+  const first=document.getElementById('ef-first').value.trim();
+  const last=document.getElementById('ef-last').value.trim();
+  let domain=document.getElementById('ef-domain').value.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/+$/,'');
+  if(!first||!last||!domain){showToast('Missing fields','Please fill in all fields.','info');return}
+  const f=first.toLowerCase(),l=last.toLowerCase(),fi=f[0],li=l[0];
+  emailData=[`${f}@${domain}`,`${l}@${domain}`,`${f}.${l}@${domain}`,`${f}${l}@${domain}`,`${fi}.${l}@${domain}`,`${fi}${l}@${domain}`,`${f}${li}@${domain}`,`${f}_${l}@${domain}`,`${l}.${f}@${domain}`,`${l}${f}@${domain}`,`${li}.${f}@${domain}`,`${f}-${l}@${domain}`];
+  document.getElementById('ef-stats').style.display='block';
+  document.getElementById('ef-stats').innerHTML=`Found <strong>${emailData.length}</strong> email patterns for <strong>${first} ${last}</strong>`;
+  const container=document.getElementById('ef-results');
+  container.style.display='block';
+  container.innerHTML=emailData.map((email,i)=>`
+    <div class="email-row" style="animation:panelIn .3s ease ${i*.03}s both">
+      <div class="email-left">
+        <span class="email-pattern">${patternLabels[i]}</span>
+        <span class="email-addr">${email}</span>
+      </div>
+      <button class="copy-sm" onclick="copyEmail(${i})" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+  `).join('');
+  document.getElementById('ef-copyAll').style.display='inline-flex';
 }
 
-emailData=generateFormats(first,last,domain);
-
-document.getElementById('stats').style.display='grid';
-document.getElementById('count').innerText=emailData.length;
-
-const results=document.getElementById('results');
-results.innerHTML='';
-
-emailData.forEach((email,index)=>{
-results.innerHTML+=`
-<div class="email-row">
-<div>${email}</div>
-<button class="copy-btn" onclick="copySingle(${index})">Copy</button>
-</div>`;
-});
-
-document.getElementById('copyAll').style.display='block';
+async function copyEmail(i){
+  const ok=await copyToClipboard(emailData[i]);
+  if(ok){
+    showToast('Copied!',emailData[i],'check');
+    const rows=document.querySelectorAll('.email-row');
+    if(rows[i])rows[i].classList.add('copied-flash');
+  }else showToast('Copy failed','Please copy manually.','info');
 }
 
-function copySingle(i){
-navigator.clipboard.writeText(emailData[i]);
+async function copyAllEmails(){
+  if(!emailData.length)return;
+  const ok=await copyToClipboard(emailData.join(', '));
+  ok?showToast('All emails copied!',emailData.length+' patterns copied.','check'):showToast('Copy failed','Please copy manually.','info');
 }
 
-function copyAllEmails(){
-navigator.clipboard.writeText(emailData.join(', '));
-const btn=document.getElementById('copyAll');
-btn.innerText='✅ Copied All Emails';
-setTimeout(()=>btn.innerText='Copy All Emails',2000);
+function clearEmailFinder(){
+  document.getElementById('ef-first').value='';
+  document.getElementById('ef-last').value='';
+  document.getElementById('ef-domain').value='';
+  document.getElementById('ef-results').style.display='none';
+  document.getElementById('ef-results').innerHTML='';
+  document.getElementById('ef-stats').style.display='none';
+  document.getElementById('ef-stats').innerHTML='';
+  document.getElementById('ef-copyAll').style.display='none';
+  emailData=[];
+  showToast('Cleared!','All fields and results cleared.','check');
 }
 
-document.addEventListener('keypress',e=>{
-if(e.key==='Enter') generateEmails();
+document.addEventListener('keypress',e=>{if(e.key==='Enter'&&(document.activeElement.id||'').startsWith('ef-'))generateEmails()});
+
+/* ===== CASE CONVERTER ===== */
+const ccText=document.getElementById('cc-text');
+ccText.addEventListener('input',updateCCStats);
+
+function updateCCStats(){
+  const t=ccText.value;
+  document.getElementById('cc-chars').textContent=t.length;
+  document.getElementById('cc-words').textContent=t.trim()===''?0:t.trim().split(/\s+/).length;
+  document.getElementById('cc-lines').textContent=t===''?0:t.split('\n').length;
+  document.getElementById('cc-sentences').textContent=t===''?0:(t.match(/[.!?]+/g)||[]).length;
+}
+
+const TITLE_MINOR=new Set(['a','an','the','and','but','or','for','nor','on','at','to','from','by','in','of','as','is','it','up','so']);
+
+function convertCase(mode){
+  if(!ccText.value.trim()){showToast('No text','Enter some text first.','info');return}
+  let t=ccText.value;
+  switch(mode){
+    case 'sentence':t=t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g,c=>c.toUpperCase());break;
+    case 'lower':t=t.toLowerCase();break;
+    case 'upper':t=t.toUpperCase();break;
+    case 'capitalized':t=t.toLowerCase().replace(/\b\w/g,l=>l.toUpperCase());break;
+    case 'title':t=t.toLowerCase().split(/(\s+)/).map((w,i)=>(i===0||!TITLE_MINOR.has(w.toLowerCase()))?w.replace(/^\w/,c=>c.toUpperCase()):w).join('');break;
+    case 'alternating':{let j=0;t=t.split('').map(c=>/[a-zA-Z]/.test(c)?(j++%2===0?c.toLowerCase():c.toUpperCase()):c).join('');break}
+    case 'inverse':t=t.split('').map(c=>c===c.toUpperCase()?c.toLowerCase():c.toUpperCase()).join('');break;
+  }
+  ccText.value=t;updateCCStats();
+  showToast('Converted!',mode.charAt(0).toUpperCase()+mode.slice(1)+' case applied.','check');
+}
+
+async function copyText(){
+  if(!ccText.value)return;
+  const ok=await copyToClipboard(ccText.value);
+  ok?showToast('Copied!','Text copied to clipboard.','check'):showToast('Copy failed','Please copy manually.','info');
+}
+
+function downloadText(){
+  if(!ccText.value)return;
+  const blob=new Blob([ccText.value],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='converted-text.txt';a.click();
+  showToast('Downloaded!','Text file has been downloaded.','check');
+}
+
+function clearText(){ccText.value='';updateCCStats()}
+
+/* ===== NUMBERS TO WORDS ===== */
+let numMode='words';
+
+function setNumMode(btn,mode){
+  numMode=mode;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  convertNumber();
+}
+
+const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+const thousands=['','Thousand','Million','Billion','Trillion'];
+
+function convertHundreds(n){
+  let s='';
+  if(n>=100){s+=ones[Math.floor(n/100)]+' Hundred ';n%=100}
+  if(n>=20){s+=tens[Math.floor(n/10)];if(n%10)s+=' '+ones[n%10]}
+  else if(n>0)s+=ones[n];
+  return s.trim();
+}
+
+function numberToWords(n){
+  if(n===0)return'Zero';let r='',i=0;
+  while(n>0){const c=n%1000;if(c){r=convertHundreds(c)+(thousands[i]?' '+thousands[i]:'')+(r?' '+r:'')}n=Math.floor(n/1000);i++}
+  return r.trim();
+}
+
+function convertNumber(){
+  const val=document.getElementById('nw-input').value;
+  const box=document.getElementById('nw-result');
+  if(!val||isNaN(parseFloat(val))||parseFloat(val)<0){
+    box.className='result-box empty';box.textContent='Enter a number to see the conversion';return;
+  }
+  const num=parseFloat(val);
+  const parts=val.split('.');
+  const integerPart=parseInt(parts[0],10);
+  let output='';
+
+  if(numMode==='words'){
+    output=numberToWords(integerPart);
+    if(parts.length>1&&parts[1]){const dw=parts[1].split('').map(d=>ones[parseInt(d)]).join(' ');output+=' Point '+dw}
+  }else if(numMode==='currency'){
+    output=numberToWords(integerPart)+' Dollars';
+    if(parts.length>1&&parts[1]){const cents=parts[1].padEnd(2,'0').substring(0,2);const cn=parseInt(cents,10);if(cn>0)output+=' and '+numberToWords(cn)+' Cents'}
+  }else if(numMode==='check'){
+    output=numberToWords(integerPart);
+    let centsStr='00';if(parts.length>1&&parts[1])centsStr=parts[1].padEnd(2,'0').substring(0,2);
+    output+=' and '+centsStr+'/100 Dollars';
+  }
+
+  const caseType=document.getElementById('nw-case').value;
+  if(caseType==='upper')output=output.toUpperCase();
+  else if(caseType==='lower')output=output.toLowerCase();
+  else if(caseType==='sentence')output=output.charAt(0).toUpperCase()+output.slice(1).toLowerCase();
+
+  box.className='result-box';
+  box.innerHTML=`<div>${output}</div><div class="result-footer"><span class="result-badge">${numMode==='words'?'Words':numMode==='currency'?'Currency':'Check Writing'}</span><button class="result-copy" onclick="copyNumResult()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>`;
+}
+
+async function copyNumResult(){
+  const box=document.getElementById('nw-result');
+  const text=box.querySelector('div').textContent;
+  const ok=await copyToClipboard(text);
+  ok?showToast('Copied!','Number in words copied.','check'):showToast('Copy failed','Please copy manually.','info');
+}
+
+document.getElementById('nw-input').addEventListener('input',convertNumber);
+document.getElementById('nw-case').addEventListener('change',convertNumber);
+
+updateCCStats();
+
+/* ===== SUBTLE CURSOR GLOW ===== */
+document.addEventListener('mousemove',e=>{
+  const orbs=document.querySelectorAll('.orb-3');
+  orbs.forEach(o=>{
+    const x=e.clientX/window.innerWidth*100;
+    const y=e.clientY/window.innerHeight*100;
+    o.style.left=x+'%';o.style.top=y+'%';
+  });
 });
 </script>
 </body>
