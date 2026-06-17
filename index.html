@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexitool Pro — Email Finder, Case Converter & More</title>
+<title>Nexitool Pro — Email Finder, Case Converter &amp; More</title>
 <meta name="description" content="Professional online tools: Email Pattern Finder, Text Case Converter, and Numbers to Words Converter. Free, fast, and privacy-first.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
 /* ===== RESET ===== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -456,6 +455,43 @@ select{cursor:pointer;appearance:auto}
 
 /* ===== PARTICLE (subtle) ===== */
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* ===== OCR (Image to Text) ===== */
+#panel-ocr .ocr-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:768px){#panel-ocr .ocr-options{grid-template-columns:1fr}}
+#panel-ocr .option-card{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface-solid);transition:var(--transition)}
+#panel-ocr .lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;margin-top:8px;max-height:160px;overflow-y:auto}
+#panel-ocr .lang-chip{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);text-align:center}
+#panel-ocr .lang-chip:hover{background:var(--primary-light);border-color:var(--primary)}
+#panel-ocr .lang-chip.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary-text);box-shadow:0 2px 8px var(--primary-glow)}
+#panel-ocr .dropzone{border:2px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--surface-solid);position:relative}
+#panel-ocr .dropzone:hover{border-color:var(--primary);background:var(--primary-light)}
+#panel-ocr .dropzone.dragover{border-color:var(--primary);background:var(--primary-light);transform:scale(1.01)}
+#panel-ocr .dropzone-icon{width:56px;height:56px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--primary-light);color:var(--primary-text);transition:var(--transition)}
+#panel-ocr .dropzone:hover .dropzone-icon{transform:translateY(-3px) scale(1.05)}
+#panel-ocr .dropzone-icon svg{width:26px;height:26px}
+#panel-ocr .dropzone-title{font-size:15px;font-weight:700;margin-bottom:4px}
+#panel-ocr .dropzone-desc{font-size:12px;color:var(--muted);line-height:1.5}
+#panel-ocr .dropzone-desc strong{color:var(--primary-text)}
+#panel-ocr .dropzone input{display:none}
+#panel-ocr .preview-wrap{margin-top:16px;position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-solid);display:none}
+#panel-ocr .preview-wrap.show{display:block;animation:panelIn .35s ease}
+#panel-ocr .preview-wrap img{display:block;width:100%;max-height:340px;object-fit:contain;background:repeating-conic-gradient(#e2e8f0 0% 25%,#fff 0% 50%) 50%/16px 16px}
+#panel-ocr .preview-remove{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:8px;border:none;background:rgba(15,23,42,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);backdrop-filter:blur(8px)}
+#panel-ocr .preview-remove:hover{background:rgba(239,68,68,.9);transform:rotate(90deg)}
+#panel-ocr .preview-remove svg{width:16px;height:16px}
+#panel-ocr .preview-meta{padding:10px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+#panel-ocr .preview-meta strong{color:var(--text)}
+#panel-ocr .progress-wrap{margin-top:14px;display:none;animation:panelIn .35s ease}
+#panel-ocr .progress-wrap.show{display:block}
+#panel-ocr .progress-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:6px}
+#panel-ocr .progress-label strong{color:var(--primary-text);font-weight:700}
+#panel-ocr .progress-bar{height:8px;border-radius:6px;background:var(--border);overflow:hidden;position:relative}
+#panel-ocr .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#06b6d4,#8b5cf6);background-size:200% 100%;border-radius:6px;transition:width .25s ease;animation:ocrProgressShine 2s linear infinite}
+@keyframes ocrProgressShine{0%{background-position:0% 0}100%{background-position:200% 0}}
+#panel-ocr .lang-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:var(--primary-light);border:1px solid var(--primary);color:var(--primary-text);font-size:13px;font-weight:700;margin-top:8px}
+#panel-ocr .lang-badge svg{width:16px;height:16px}
+#panel-ocr .hint{margin-top:8px;font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -472,14 +508,14 @@ select{cursor:pointer;appearance:auto}
   <div class="navbar-inner">
     <a href="index.html" class="brand">
       <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
       </div>
       <span class="brand-text">Nexitool Pro</span>
     </a>
     <div class="nav-actions">
       <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
-        <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
       </button>
     </div>
   </div>
@@ -487,7 +523,7 @@ select{cursor:pointer;appearance:auto}
 
 <!-- HERO -->
 <section class="hero">
-  <h1>Professional Online <span>Text & Email Tools</span></h1>
+  <h1>Professional Online <span>Text &amp; Email Tools</span></h1>
   <p>Find email patterns, convert text cases, and transform numbers to words — all in one place, right in your browser.</p>
 </section>
 
@@ -495,16 +531,20 @@ select{cursor:pointer;appearance:auto}
 <div class="tabs">
   <div class="tab-list">
     <button class="tab-btn active" onclick="switchTab('email')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
       Email Finder
     </button>
     <button class="tab-btn" onclick="switchTab('case')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
       Case Converter
     </button>
     <button class="tab-btn" onclick="switchTab('numbers')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
       Num to Words
+    </button>
+    <button class="tab-btn" onclick="switchTab('ocr')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 8h2M7 12h2M7 16h2M13 8h4M13 12h4M13 16h4"></path></svg>
+      Image to Text
     </button>
   </div>
 
@@ -513,7 +553,7 @@ select{cursor:pointer;appearance:auto}
     <div class="card">
       <div class="card-header">
         <div class="card-icon emerald">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
         </div>
         <div>
           <div class="card-title">Email Pattern Finder</div>
@@ -536,15 +576,15 @@ select{cursor:pointer;appearance:auto}
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="generateEmails()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           Generate Patterns
         </button>
         <button class="btn btn-outline" id="ef-copyAll" onclick="copyAllEmails()" style="display:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Copy All
         </button>
         <button class="btn btn-ghost" onclick="clearEmailFinder()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           Clear
         </button>
       </div>
@@ -559,7 +599,7 @@ select{cursor:pointer;appearance:auto}
     <div class="card">
       <div class="card-header">
         <div class="card-icon violet">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
         </div>
         <div>
           <div class="card-title">Text Case Converter</div>
@@ -574,25 +614,25 @@ select{cursor:pointer;appearance:auto}
         <span><strong id="cc-sentences">0</strong> sentences</span>
       </div>
       <div class="case-row">
-        <button class="case-btn" onclick="convertCase('sentence')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"/><path d="M9 4l-5 16"/><path d="M15 4l5 16"/></svg>Sentence</button>
-        <button class="case-btn" onclick="convertCase('lower')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"/><path d="M7 14v-3a5 5 0 0 1 10 0v3"/></svg>lower</button>
-        <button class="case-btn" onclick="convertCase('upper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"/><path d="M7 10v-3a5 5 0 0 1 10 0v3"/></svg>UPPER</button>
-        <button class="case-btn" onclick="convertCase('capitalized')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>Capitalized</button>
-        <button class="case-btn" onclick="convertCase('title')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>Title</button>
-        <button class="case-btn" onclick="convertCase('alternating')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 3 4 21"/><polyline points="16 3 20 21"/></svg>aLtErNaTiNg</button>
-        <button class="case-btn" onclick="convertCase('inverse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5"/><path d="M3 11V9a4 4 0 0 1 4-4h4"/><polyline points="7 23 3 19"/><path d="M21 13v2a4 4 0 0 1-4 4h-4"/></svg>InVeRsE</button>
+        <button class="case-btn" onclick="convertCase('sentence')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"></path><path d="M9 4l-5 16"></path><path d="M15 4l5 16"></path></svg>Sentence</button>
+        <button class="case-btn" onclick="convertCase('lower')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M7 14v-3a5 5 0 0 1 10 0v3"></path></svg>lower</button>
+        <button class="case-btn" onclick="convertCase('upper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"></line><path d="M7 10v-3a5 5 0 0 1 10 0v3"></path></svg>UPPER</button>
+        <button class="case-btn" onclick="convertCase('capitalized')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"></path><path d="M9 20h6"></path><path d="M12 4v16"></path></svg>Capitalized</button>
+        <button class="case-btn" onclick="convertCase('title')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"></path><path d="M9 20h6"></path><path d="M12 4v16"></path></svg>Title</button>
+        <button class="case-btn" onclick="convertCase('alternating')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 3 4 21"></polyline><polyline points="16 3 20 21"></polyline></svg>aLtErNaTiNg</button>
+        <button class="case-btn" onclick="convertCase('inverse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h4"></path><polyline points="7 23 3 19"></polyline><path d="M21 13v2a4 4 0 0 1-4 4h-4"></path></svg>InVeRsE</button>
       </div>
       <div class="action-row">
         <button class="btn btn-outline" onclick="copyText()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Copy
         </button>
         <button class="btn btn-outline" onclick="downloadText()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           Download
         </button>
         <button class="btn btn-danger" onclick="clearText()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           Clear
         </button>
       </div>
@@ -604,7 +644,7 @@ select{cursor:pointer;appearance:auto}
     <div class="card">
       <div class="card-header">
         <div class="card-icon amber">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
         </div>
         <div>
           <div class="card-title">Numbers to Words</div>
@@ -618,15 +658,15 @@ select{cursor:pointer;appearance:auto}
           <label class="field-label">Conversion Mode</label>
           <div class="mode-grid" style="margin-bottom:14px">
             <button class="mode-btn active" onclick="setNumMode(this,'words')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
               <span class="mode-label">Words</span>
             </button>
             <button class="mode-btn" onclick="setNumMode(this,'currency')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               <span class="mode-label">Currency</span>
             </button>
             <button class="mode-btn" onclick="setNumMode(this,'check')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
               <span class="mode-label">Check</span>
             </button>
           </div>
@@ -642,6 +682,103 @@ select{cursor:pointer;appearance:auto}
           <label class="field-label">Result</label>
           <div class="result-box empty" id="nw-result">Enter a number to see the conversion</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCR IMAGE TO TEXT -->
+  <div class="tab-panel" id="panel-ocr">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon emerald">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 8h2M7 12h2M7 16h2M13 8h4M13 12h4M13 16h4"></path></svg>
+        </div>
+        <div>
+          <div class="card-title">Image to Text (OCR)</div>
+          <div class="card-desc">Extract English text from images &mdash; fast, private, runs entirely in your browser</div>
+        </div>
+      </div>
+
+      <div class="ocr-options">
+        <div class="option-card">
+          <label class="field-label">Language</label>
+          <div class="lang-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            English
+          </div>
+          <div class="hint">Currently supporting English text only. More languages may be added in future versions.</div>
+        </div>
+        <div class="option-card">
+          <label class="field-label">Output Mode</label>
+          <div class="lang-grid">
+            <button class="lang-chip active" data-ocr-mode="standard">Standard</button>
+            <button class="lang-chip" data-ocr-mode="layout">Preserve Layout</button>
+            <button class="lang-chip" data-ocr-mode="raw">Raw</button>
+          </div>
+          <label class="field-label" style="margin-top:14px">Image Preprocessing</label>
+          <div class="lang-grid">
+            <button class="lang-chip active" data-ocr-preprocess="auto">Auto</button>
+            <button class="lang-chip" data-ocr-preprocess="grayscale">Grayscale</button>
+            <button class="lang-chip" data-ocr-preprocess="contrast">High Contrast</button>
+            <button class="lang-chip" data-ocr-preprocess="none">None</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropzone" id="ocrDropzone" onclick="document.getElementById('ocrFileInput').click()">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </div>
+        <div class="dropzone-title">Drop image here or click to upload</div>
+        <div class="dropzone-desc">Supports <strong>PNG, JPG, JPEG, JFIF, WebP, BMP, GIF</strong> &middot; Max 10 MB &middot; Processed locally in your browser</div>
+        <input type="file" id="ocrFileInput" accept="image/png,image/jpeg,image/jfif,.jfif,.jpg,.jpeg,image/webp,image/bmp,image/gif">
+      </div>
+
+      <div class="preview-wrap" id="ocrPreviewWrap">
+        <img id="ocrPreviewImg" alt="Preview">
+        <button class="preview-remove" onclick="ocrClearImage()" title="Remove image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="preview-meta">
+          <span><strong id="ocrPreviewName">image.png</strong></span>
+          <span><span id="ocrPreviewSize">0 KB</span> &middot; <span id="ocrPreviewDim">&mdash;</span></span>
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="ocrProgressWrap">
+        <div class="progress-label">
+          <span id="ocrProgressStatus">Initializing OCR engine&hellip;</span>
+          <strong id="ocrProgressPct">0%</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="ocrProgressFill"></div></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" id="ocrExtractBtn" onclick="ocrRun()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 16l4-4 4 4 5-5"></path></svg>
+          Extract Text
+        </button>
+        <button class="btn btn-outline" id="ocrCopyBtn" onclick="ocrCopy()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy
+        </button>
+        <button class="btn btn-outline" id="ocrDownloadBtn" onclick="ocrDownload()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download .txt
+        </button>
+        <button class="btn btn-danger" onclick="ocrClearAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+
+      <textarea id="ocrResult" placeholder="Extracted text will appear here&hellip; You can edit it before copying or downloading." readonly></textarea>
+      <div class="text-stats">
+        <span><strong id="ocrChars">0</strong> chars</span>
+        <span><strong id="ocrWords">0</strong> words</span>
+        <span><strong id="ocrLines">0</strong> lines</span>
+        <span id="ocrConfidence" style="display:none">Confidence: <strong>&mdash;</strong></span>
+        <span id="ocrTime" style="display:none">Time: <strong>&mdash;</strong></span>
       </div>
     </div>
   </div>
@@ -679,7 +816,7 @@ function toggleTheme(){
 
 /* ===== TABS ===== */
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers'][i]===tab));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers','ocr'][i]===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
 }
@@ -1374,5 +1511,253 @@ document.addEventListener('mousemove',e=>{
   });
 });
 </script>
-</body>
-</html>
+
+
+<script>
+
+/* ===== OCR (Image to Text) — English only ===== */
+let ocrCurrentImage=null;
+let ocrOutputMode='standard';
+let ocrPreprocess='auto';
+let ocrIsRunning=false;
+
+(function ocrInit(){
+  document.querySelectorAll('[data-ocr-mode]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('[data-ocr-mode]').forEach(c=>c.classList.remove('active'));
+      ocrOutputMode=chip.dataset.ocrMode;
+      chip.classList.add('active');
+    });
+  });
+  document.querySelectorAll('[data-ocr-preprocess]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('[data-ocr-preprocess]').forEach(c=>c.classList.remove('active'));
+      ocrPreprocess=chip.dataset.ocrPreprocess;
+      chip.classList.add('active');
+    });
+  });
+
+  const fileInput=document.getElementById('ocrFileInput');
+  const dropzone=document.getElementById('ocrDropzone');
+
+  fileInput.addEventListener('change',e=>{
+    if(e.target.files[0]) ocrHandleFile(e.target.files[0]);
+  });
+  ['dragenter','dragover'].forEach(ev=>{
+    dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('dragover')});
+  });
+  ['dragleave','drop'].forEach(ev=>{
+    dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('dragover')});
+  });
+  dropzone.addEventListener('drop',e=>{
+    const f=e.dataTransfer.files[0];
+    if(f) ocrHandleFile(f);
+  });
+
+  window.addEventListener('paste',e=>{
+    if(!document.getElementById('panel-ocr').classList.contains('active')) return;
+    const items=(e.clipboardData&&e.clipboardData.items)||[];
+    for(let i=0;i<items.length;i++){
+      if(items[i].type.indexOf('image/')===0){
+        const f=items[i].getAsFile();
+        if(f) ocrHandleFile(f);
+        break;
+      }
+    }
+  });
+
+  document.getElementById('ocrResult').addEventListener('input',e=>ocrUpdateStats(e.target.value));
+})();
+
+function ocrHandleFile(file){
+  if(!file.type||file.type.indexOf('image/')!==0){
+    showToast('Invalid file','Please select an image file (PNG, JPG, JPEG, JFIF, WebP, BMP, GIF).','error');
+    return;
+  }
+  if(file.size>10*1024*1024){
+    showToast('File too large','Please upload an image under 10 MB.','error');
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    ocrCurrentImage={dataUrl:ev.target.result,file:file};
+    const wrap=document.getElementById('ocrPreviewWrap');
+    const img=document.getElementById('ocrPreviewImg');
+    img.src=ev.target.result;
+    document.getElementById('ocrPreviewName').textContent=file.name||'pasted-image.png';
+    document.getElementById('ocrPreviewSize').textContent=ocrFormatBytes(file.size);
+    img.onload=()=>{
+      document.getElementById('ocrPreviewDim').textContent=img.naturalWidth+'\u00d7'+img.naturalHeight+' px';
+    };
+    wrap.classList.add('show');
+    document.getElementById('ocrExtractBtn').disabled=false;
+    showToast('Image loaded','Ready to extract text. Click "Extract Text".','check');
+  };
+  reader.readAsDataURL(file);
+}
+
+function ocrFormatBytes(b){
+  if(b<1024) return b+' B';
+  if(b<1024*1024) return (b/1024).toFixed(1)+' KB';
+  return (b/1024/1024).toFixed(2)+' MB';
+}
+
+function ocrClearImage(){
+  ocrCurrentImage=null;
+  document.getElementById('ocrPreviewWrap').classList.remove('show');
+  document.getElementById('ocrFileInput').value='';
+  document.getElementById('ocrExtractBtn').disabled=true;
+}
+
+function ocrClearAll(){
+  ocrClearImage();
+  document.getElementById('ocrResult').value='';
+  document.getElementById('ocrProgressWrap').classList.remove('show');
+  document.getElementById('ocrCopyBtn').disabled=true;
+  document.getElementById('ocrDownloadBtn').disabled=true;
+  document.getElementById('ocrChars').textContent='0';
+  document.getElementById('ocrWords').textContent='0';
+  document.getElementById('ocrLines').textContent='0';
+  document.getElementById('ocrConfidence').style.display='none';
+  document.getElementById('ocrTime').style.display='none';
+}
+
+function ocrPreprocessImage(dataUrl,mode){
+  return new Promise((resolve)=>{
+    if(mode==='none'){resolve(dataUrl);return}
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      canvas.width=img.naturalWidth;
+      canvas.height=img.naturalHeight;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0);
+      if(mode==='grayscale'||mode==='auto'||mode==='contrast'){
+        const imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const d=imgData.data;
+        for(let i=0;i<d.length;i+=4){
+          const g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+          d[i]=d[i+1]=d[i+2]=g;
+        }
+        if(mode==='contrast'){
+          let min=255,max=0;
+          for(let i=0;i<d.length;i+=4){
+            if(d[i]<min)min=d[i];
+            if(d[i]>max)max=d[i];
+          }
+          const range=max-min||1;
+          for(let i=0;i<d.length;i+=4){
+            d[i]=d[i+1]=d[i+2]=((d[i]-min)/range)*255;
+          }
+        }
+        ctx.putImageData(imgData,0,0);
+      }
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.src=dataUrl;
+  });
+}
+
+async function ocrRun(){
+  if(!ocrCurrentImage||ocrIsRunning) return;
+  ocrIsRunning=true;
+  const btn=document.getElementById('ocrExtractBtn');
+  btn.disabled=true;
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:orbFloat 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Extracting\u2026';
+  document.getElementById('ocrProgressWrap').classList.add('show');
+  document.getElementById('ocrProgressFill').style.width='0%';
+  document.getElementById('ocrProgressPct').textContent='0%';
+  document.getElementById('ocrProgressStatus').textContent='Preprocessing image\u2026';
+
+  const start=performance.now();
+  try{
+    const processed=await ocrPreprocessImage(ocrCurrentImage.dataUrl,ocrPreprocess);
+    const langStr='eng';
+    document.getElementById('ocrProgressStatus').textContent='Loading OCR engine & language data\u2026';
+
+    const result=await Tesseract.recognize(
+      processed,langStr,
+      {
+        logger:m=>{
+          if(m.status==='recognizing text'){
+            const pct=Math.round(m.progress*100);
+            document.getElementById('ocrProgressFill').style.width=pct+'%';
+            document.getElementById('ocrProgressPct').textContent=pct+'%';
+            document.getElementById('ocrProgressStatus').textContent='Recognizing text\u2026';
+          }else if(m.status){
+            document.getElementById('ocrProgressStatus').textContent=ocrCapitalize(m.status)+'\u2026';
+            if(typeof m.progress==='number'){
+              const pct=Math.round(m.progress*100);
+              document.getElementById('ocrProgressFill').style.width=pct+'%';
+              document.getElementById('ocrProgressPct').textContent=pct+'%';
+            }
+          }
+        }
+      }
+    );
+
+    const elapsed=((performance.now()-start)/1000).toFixed(2);
+    let text=result.data.text||'';
+    const confidence=result.data.confidence?Math.round(result.data.confidence):null;
+
+    if(ocrOutputMode==='standard'){
+      text=text.split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/\n{3,}/g,'\n\n').trim();
+    }else if(ocrOutputMode==='layout'){
+      text=text.replace(/\n{3,}/g,'\n\n').trim();
+    }
+
+    const ta=document.getElementById('ocrResult');
+    ta.value=text;
+    ta.readOnly=false;
+    ocrUpdateStats(text);
+    if(confidence!==null){
+      document.getElementById('ocrConfidence').innerHTML='Confidence: <strong>'+confidence+'%</strong>';
+      document.getElementById('ocrConfidence').style.display='inline';
+    }
+    document.getElementById('ocrTime').innerHTML='Time: <strong>'+elapsed+'s</strong>';
+    document.getElementById('ocrTime').style.display='inline';
+    document.getElementById('ocrCopyBtn').disabled=false;
+    document.getElementById('ocrDownloadBtn').disabled=false;
+    document.getElementById('ocrProgressStatus').textContent='Done \u2713';
+    showToast('Extraction complete',confidence!==null?'Extracted '+text.length+' characters with '+confidence+'% confidence.':'Extraction complete.','check');
+  }catch(err){
+    console.error(err);
+    showToast('OCR failed',err.message||'Could not extract text from this image.','error');
+    document.getElementById('ocrProgressStatus').textContent='Failed \u2717';
+  }finally{
+    ocrIsRunning=false;
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 16l4-4 4 4 5-5"></path></svg> Extract Text';
+  }
+}
+
+function ocrCapitalize(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s}
+
+function ocrUpdateStats(text){
+  document.getElementById('ocrChars').textContent=text.length;
+  document.getElementById('ocrWords').textContent=text.trim()?text.trim().split(/\s+/).length:0;
+  document.getElementById('ocrLines').textContent=text?text.split('\n').length:0;
+}
+
+async function ocrCopy(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to copy','Extract some text first.','error');return}
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('Copied','Text copied to clipboard.','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+function ocrDownload(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to download','Extract some text first.','error');return}
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='extracted-text-'+Date.now()+'.txt';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Downloaded','Text file saved to your device.','check');
+}
+</script>
+</body></html>
