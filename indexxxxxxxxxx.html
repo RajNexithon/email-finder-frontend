@@ -1,0 +1,2021 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexitool Pro — Email Finder, Case Converter &amp; More</title>
+<meta name="description" content="Professional online tools: Email Pattern Finder, Text Case Converter, and Numbers to Words Converter. Free, fast, and privacy-first.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#f8fafc;
+  --surface:rgba(255,255,255,.82);
+  --surface-solid:#fff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --border-hover:#cbd5e1;
+  --primary:#10b981;
+  --primary-hover:#059669;
+  --primary-glow:rgba(16,185,129,.15);
+  --primary-light:rgba(16,185,129,.07);
+  --primary-text:#059669;
+  --violet:#8b5cf6;
+  --violet-glow:rgba(139,92,246,.15);
+  --violet-light:rgba(139,92,246,.07);
+  --violet-text:#7c3aed;
+  --amber:#f59e0b;
+  --amber-glow:rgba(245,158,11,.15);
+  --amber-light:rgba(245,158,11,.07);
+  --amber-text:#d97706;
+  --red:#ef4444;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.05);
+  --shadow-md:0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:0 16px 40px rgba(0,0,0,.07);
+  --transition:all .25s cubic-bezier(.4,0,.2,1);
+}
+body.dark{
+  --bg:#0c1222;
+  --surface:rgba(22,33,62,.82);
+  --surface-solid:#162040;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --border:#1e2d4a;
+  --border-hover:#2a3f6a;
+  --primary-glow:rgba(16,185,129,.2);
+  --primary-light:rgba(16,185,129,.1);
+  --primary-text:#34d399;
+  --violet-glow:rgba(139,92,246,.2);
+  --violet-light:rgba(139,92,246,.1);
+  --violet-text:#a78bfa;
+  --amber-glow:rgba(245,158,11,.2);
+  --amber-light:rgba(245,158,11,.1);
+  --amber-text:#fbbf24;
+  --shadow:0 1px 3px rgba(0,0,0,.15);
+  --shadow-md:0 4px 12px rgba(0,0,0,.2);
+  --shadow-lg:0 16px 40px rgba(0,0,0,.25);
+}
+
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  transition:background .4s,color .4s;
+  overflow-x:hidden;
+}
+
+/* ===== ANIMATED BG ===== */
+.bg-glow{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;overflow:hidden;
+}
+.bg-glow .orb{
+  position:absolute;border-radius:50%;filter:blur(100px);
+  animation:orbFloat 20s ease-in-out infinite;
+}
+.bg-glow .orb-1{
+  width:600px;height:600px;top:-200px;left:-100px;
+  background:var(--primary-glow);animation-delay:0s;
+}
+.bg-glow .orb-2{
+  width:500px;height:500px;bottom:-150px;right:-100px;
+  background:var(--violet-glow);animation-delay:-7s;
+}
+.bg-glow .orb-3{
+  width:400px;height:400px;top:40%;left:50%;
+  background:var(--amber-glow);animation-delay:-14s;opacity:.5;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(40px,-30px) scale(1.05)}
+  50%{transform:translate(-20px,40px) scale(.95)}
+  75%{transform:translate(30px,20px) scale(1.02)}
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:var(--transition);
+}
+.navbar-inner{
+  max-width:1400px;width:100%;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:56px;
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.brand-icon{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;background:linear-gradient(135deg,#10b981,#06b6d4);
+  box-shadow:0 2px 8px rgba(16,185,129,.3);
+  transition:var(--transition);
+}
+.brand-icon:hover{transform:scale(1.1);box-shadow:0 4px 16px rgba(16,185,129,.4)}
+.brand-icon svg{width:18px;height:18px}
+.brand-text{font-size:18px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--text),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.theme-btn{
+  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--text);cursor:pointer;
+  transition:var(--transition);
+}
+.theme-btn:hover{background:var(--border);border-color:var(--border-hover);transform:rotate(15deg)}
+.theme-btn svg{width:18px;height:18px}
+
+/* ===== HERO ===== */
+.hero{
+  text-align:center;padding:32px 24px 20px;position:relative;z-index:1;
+}
+.hero h1{
+  font-size:30px;font-weight:800;letter-spacing:-.7px;line-height:1.15;
+  animation:slideUp .6s ease;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#10b981,#06b6d4,#8b5cf6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{
+  margin-top:8px;color:var(--muted);font-size:15px;
+  max-width:560px;margin-left:auto;margin-right:auto;
+  animation:slideUp .6s ease .1s both;
+}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== TABS ===== */
+.tabs{
+  max-width:1400px;width:100%;margin:0 auto;
+  padding:0 24px 48px;flex:1;position:relative;z-index:1;
+  text-align:center;
+}
+.tab-list{
+  display:inline-flex;gap:4px;
+  background:var(--surface);backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:12px;padding:4px;margin-bottom:20px;
+  box-shadow:var(--shadow);
+  margin-left:auto;margin-right:auto;
+}
+.tab-btn{
+  padding:10px 20px;border:none;border-radius:9px;
+  background:transparent;color:var(--muted);
+  font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+  display:flex;align-items:center;gap:7px;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{
+  background:var(--surface-solid);color:var(--text);
+  box-shadow:var(--shadow-md);
+}
+.tab-btn svg{width:16px;height:16px}
+.tab-panel{display:none;animation:panelIn .35s ease}
+.tab-panel.active{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== CARD ===== */
+.card{
+  background:var(--surface);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:24px;box-shadow:var(--shadow-lg);
+  overflow:hidden;transition:var(--transition);
+}
+.card:hover{box-shadow:0 20px 50px rgba(0,0,0,.08)}
+.card-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.card-icon{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  border-radius:14px;flex-shrink:0;
+  transition:var(--transition);
+}
+.card-icon:hover{transform:scale(1.08)}
+.card-icon svg{width:22px;height:22px}
+.card-icon.emerald{background:var(--primary-light);color:var(--primary-text);box-shadow:0 2px 12px var(--primary-glow)}
+.card-icon.violet{background:var(--violet-light);color:var(--violet-text);box-shadow:0 2px 12px var(--violet-glow)}
+.card-icon.amber{background:var(--amber-light);color:var(--amber-text);box-shadow:0 2px 12px var(--amber-glow)}
+.card-title{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.card-desc{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* ===== FORM ===== */
+label.field-label{
+  display:block;font-size:12px;font-weight:600;
+  color:var(--muted);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+input[type="text"],input[type="number"],select{
+  width:100%;display:block;padding:11px 14px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--surface-solid);color:var(--text);
+  font-family:inherit;font-size:14px;
+  transition:var(--transition);
+}
+input[type="text"]:focus,input[type="number"]:focus,select:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+textarea{
+  resize:vertical;min-height:220px;
+  font-family:'Inter',monospace;font-size:14px;
+  padding:16px 24px;
+  width:calc(100% + 48px);margin-left:-24px;margin-right:-24px;margin-top:12px;
+  border-radius:0;border-left:none;border-right:none;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--surface-solid);color:var(--text);
+  display:block;transition:var(--transition);
+}
+textarea:focus{
+  outline:none;border-color:var(--violet);
+  box-shadow:0 0 0 3px var(--violet-glow);
+}
+select{cursor:pointer;appearance:auto}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 20px;border:none;border-radius:10px;
+  font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 2px 8px var(--primary-glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--primary-glow)}
+.btn-primary:active{transform:translateY(0)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--border);border-color:var(--border-hover)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid transparent}
+.btn-ghost:hover{color:var(--red);background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--border)}
+.btn-danger:hover{background:rgba(239,68,68,.08);border-color:var(--red)}
+
+/* ===== GRID ===== */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){
+  .grid-3,.grid-2{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .card{padding:16px}
+  textarea{width:calc(100% + 32px);margin-left:-16px;margin-right:-16px;padding:14px 16px}
+  .tabs{padding:0 12px 32px}
+  .navbar-inner{padding:0 16px}
+}
+
+/* ===== EMAIL FINDER ===== */
+.email-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-radius:10px;transition:var(--transition);
+}
+.email-row:hover{background:var(--primary-light)}
+.email-row+.email-row{border-top:1px solid var(--border)}
+.email-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.email-pattern{
+  font-size:10px;font-family:monospace;
+  padding:3px 8px;border-radius:6px;
+  background:var(--primary-light);color:var(--primary-text);
+  white-space:nowrap;flex-shrink:0;font-weight:600;
+}
+.email-priority{
+  font-size:9px;font-family:Inter,sans-serif;
+  padding:2px 6px;border-radius:4px;
+  white-space:nowrap;flex-shrink:0;font-weight:700;
+  letter-spacing:.3px;
+}
+.email-priority.high{background:rgba(16,185,129,.15);color:#059669;}
+.email-priority.medium{background:rgba(245,158,11,.12);color:#d97706;}
+.email-priority.low{background:rgba(100,116,139,.1);color:#64748b;}
+.email-row.top-pattern{background:rgba(16,185,129,.04);border-left:3px solid var(--primary);}
+.email-row.detected-pattern{background:rgba(16,185,129,.08);border-left:3px solid #059669;box-shadow:0 0 0 1px rgba(16,185,129,.15);}
+.email-row.detected-pattern .email-addr{font-weight:700;}
+.domain-detect{
+  margin-top:12px;padding:14px 16px;border-radius:12px;
+  display:none;animation:panelIn .35s ease;
+}
+.domain-detect.found{
+  display:block;
+  background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.03));
+  border:1.5px solid rgba(16,185,129,.25);
+}
+.domain-detect.not-found{
+  display:block;
+  background:rgba(245,158,11,.06);
+  border:1.5px solid rgba(245,158,11,.2);
+}
+.domain-detect-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.domain-detect-header svg{width:18px;height:18px;flex-shrink:0}
+.domain-detect.found .domain-detect-header{color:#059669}
+.domain-detect.not-found .domain-detect-header{color:#d97706}
+.domain-detect-title{font-weight:700;font-size:14px}
+.domain-detect-body{font-size:12px;color:var(--muted);line-height:1.6}
+.domain-detect-body strong{color:var(--text)}
+.domain-detect-pattern{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:6px;padding:6px 12px;border-radius:8px;
+  background:rgba(16,185,129,.12);color:#059669;
+  font-family:monospace;font-size:13px;font-weight:700;
+}
+.domain-detect-pattern svg{width:14px;height:14px}
+.domain-detect-confidence{
+  display:inline-block;margin-left:8px;
+  font-size:10px;padding:2px 6px;border-radius:4px;
+  font-weight:700;letter-spacing:.3px;
+}
+.domain-detect-confidence.verified{background:rgba(16,185,129,.15);color:#059669}
+.domain-detect-confidence.likely{background:rgba(245,158,11,.12);color:#d97706}
+.domain-detect-confidence.guessed{background:rgba(100,116,139,.1);color:#64748b}
+.email-addr{font-size:13px;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy-sm{
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border:none;border-radius:8px;background:transparent;color:var(--muted);
+  cursor:pointer;transition:var(--transition);flex-shrink:0;opacity:0;
+}
+.copy-sm svg{width:14px;height:14px}
+.email-row:hover .copy-sm{opacity:1}
+.copy-sm:hover{background:var(--primary-light);color:var(--primary-text)}
+.email-stats{font-size:13px;color:var(--muted);margin-top:10px}
+.email-stats strong{color:var(--text)}
+.email-list{margin-top:12px;border:1px solid var(--border);border-radius:14px;overflow:hidden;max-height:340px;overflow-y:auto}
+.copied-flash{animation:flash .4s ease}
+@keyframes flash{0%{background:var(--primary-light)}100%{background:transparent}}
+
+/* ===== CASE CONVERTER ===== */
+.text-stats{
+  display:flex;gap:16px;flex-wrap:wrap;
+  margin-top:10px;font-size:12px;color:var(--muted);
+}
+.text-stats strong{color:var(--text)}
+.case-row{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;
+}
+.case-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border:1px solid var(--border);border-radius:8px;
+  background:transparent;color:var(--text);font-family:inherit;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:var(--transition);white-space:nowrap;
+}
+.case-btn svg{width:14px;height:14px;color:var(--muted)}
+.case-btn:hover{background:var(--violet-light);border-color:var(--violet);transform:translateY(-1px)}
+.case-btn:active{transform:translateY(0)}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* ===== NUMBERS TO WORDS ===== */
+.num-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:768px){.num-layout{grid-template-columns:1fr}}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;border:1px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--text);font-family:inherit;
+  cursor:pointer;transition:var(--transition);
+}
+.mode-btn svg{width:16px;height:16px}
+.mode-btn .mode-label{font-size:11px;font-weight:600}
+.mode-btn:hover{background:var(--amber-light);border-color:var(--amber)}
+.mode-btn.active{background:var(--amber-light);border-color:var(--amber);color:var(--amber-text);box-shadow:0 2px 8px var(--amber-glow)}
+.result-box{
+  border:1px solid var(--border);border-radius:14px;
+  background:var(--surface-solid);padding:18px;
+  min-height:120px;font-size:14px;line-height:1.7;font-weight:500;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:var(--transition);
+}
+.result-box.empty{
+  background:transparent;border-style:dashed;color:var(--muted);
+  font-weight:400;align-items:center;justify-content:center;
+}
+.result-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--border);
+}
+.result-badge{
+  font-size:10px;padding:3px 10px;border-radius:6px;
+  background:var(--amber-light);color:var(--amber-text);font-weight:600;
+}
+.result-copy{
+  display:flex;align-items:center;gap:5px;
+  border:none;border-radius:8px;background:transparent;
+  color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;
+  transition:var(--transition);
+}
+.result-copy svg{width:14px;height:14px}
+.result-copy:hover{color:var(--text)}
+
+/* ===== TOAST ===== */
+.toast-container{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  display:flex;flex-direction:column;gap:10px;
+}
+.toast{
+  background:var(--surface-solid);border:1px solid var(--border);
+  border-radius:14px;padding:14px 18px;
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
+  font-size:13px;max-width:320px;
+  display:flex;align-items:flex-start;gap:10px;
+  animation:toastIn .35s cubic-bezier(.4,0,.2,1);
+}
+.toast.out{animation:toastOut .25s ease forwards}
+.toast-icon{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:var(--primary-light);color:var(--primary-text);
+}
+.toast-icon svg{width:14px;height:14px}
+.toast-icon.error{background:rgba(239,68,68,.12);color:var(--red)}
+.toast-body{flex:1}
+.toast-title{font-weight:700;font-size:13px}
+.toast-desc{color:var(--muted);font-size:12px;margin-top:2px}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(10px) scale(.95)}}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--border);
+  background:var(--surface);backdrop-filter:blur(12px);
+  padding:20px;text-align:center;position:relative;z-index:1;
+}
+.footer-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:13px;color:var(--muted);
+}
+.footer-heart{color:#ef4444;animation:heartbeat 1.5s ease infinite}
+@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* ===== SCROLL ===== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+
+/* ===== PARTICLE (subtle) ===== */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* ===== OCR (Image to Text) ===== */
+#panel-ocr .ocr-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:768px){#panel-ocr .ocr-options{grid-template-columns:1fr}}
+#panel-ocr .option-card{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface-solid);transition:var(--transition)}
+#panel-ocr .lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;margin-top:8px;max-height:160px;overflow-y:auto}
+#panel-ocr .lang-chip{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);text-align:center}
+#panel-ocr .lang-chip:hover{background:var(--primary-light);border-color:var(--primary)}
+#panel-ocr .lang-chip.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary-text);box-shadow:0 2px 8px var(--primary-glow)}
+#panel-ocr .dropzone{border:2px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--surface-solid);position:relative}
+#panel-ocr .dropzone:hover{border-color:var(--primary);background:var(--primary-light)}
+#panel-ocr .dropzone.dragover{border-color:var(--primary);background:var(--primary-light);transform:scale(1.01)}
+#panel-ocr .dropzone-icon{width:56px;height:56px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--primary-light);color:var(--primary-text);transition:var(--transition)}
+#panel-ocr .dropzone:hover .dropzone-icon{transform:translateY(-3px) scale(1.05)}
+#panel-ocr .dropzone-icon svg{width:26px;height:26px}
+#panel-ocr .dropzone-title{font-size:15px;font-weight:700;margin-bottom:4px}
+#panel-ocr .dropzone-desc{font-size:12px;color:var(--muted);line-height:1.5}
+#panel-ocr .dropzone-desc strong{color:var(--primary-text)}
+#panel-ocr .dropzone input{display:none}
+#panel-ocr .paste-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;flex-wrap:wrap;
+  margin-top:10px;margin-bottom:4px;
+}
+#panel-ocr .paste-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:10px;
+  border:1.5px dashed var(--border);
+  background:var(--surface-solid);
+  color:var(--text);font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+}
+#panel-ocr .paste-btn:hover{
+  border-color:var(--primary);border-style:solid;
+  background:var(--primary-light);color:var(--primary-text);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px var(--primary-glow);
+}
+#panel-ocr .paste-btn svg{width:15px;height:15px}
+#panel-ocr .paste-hint{font-size:11px;color:var(--muted)}
+#panel-ocr .paste-hint kbd{
+  display:inline-block;
+  padding:1px 6px;margin:0 1px;
+  border:1px solid var(--border);border-bottom-width:2px;
+  border-radius:5px;
+  background:var(--surface-solid);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px;font-weight:600;color:var(--text);
+}
+#panel-ocr .preview-wrap{margin-top:16px;position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-solid);display:none}
+#panel-ocr .preview-wrap.show{display:block;animation:panelIn .35s ease}
+#panel-ocr .preview-stage{display:flex;justify-content:center;align-items:center;padding:8px;background:repeating-conic-gradient(#e2e8f0 0% 25%,#fff 0% 50%) 50%/16px 16px;min-height:80px}
+body.dark #panel-ocr .preview-stage{background:repeating-conic-gradient(#1e2d4a 0% 25%,#162040 0% 50%) 50%/16px 16px}
+#panel-ocr .preview-img-wrap{position:relative;display:inline-block;max-width:100%;line-height:0}
+#panel-ocr .preview-img-wrap img{display:block;max-width:100%;max-height:340px;width:auto;height:auto}
+#panel-ocr .lens-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#panel-ocr .lens-word{
+  position:absolute;
+  border:1.5px solid rgba(16,185,129,.7);
+  background:rgba(16,185,129,.14);
+  cursor:pointer;
+  pointer-events:auto;
+  transition:background .15s,border-color .15s,transform .15s,box-shadow .15s;
+  border-radius:3px;
+  box-sizing:border-box;
+  line-height:1;
+}
+#panel-ocr .lens-word:hover{
+  background:rgba(245,158,11,.45);
+  border-color:#f59e0b;
+  z-index:5;
+  transform:scale(1.04);
+  box-shadow:0 4px 12px rgba(245,158,11,.35);
+}
+#panel-ocr .lens-word.selected{
+  background:rgba(16,185,129,.45);
+  border-color:#059669;
+  z-index:4;
+}
+#panel-ocr .lens-word.copied{animation:ocrLensFlash .6s ease}
+@keyframes ocrLensFlash{
+  0%,100%{background:rgba(16,185,129,.14);transform:scale(1)}
+  50%{background:rgba(16,185,129,.85);transform:scale(1.08);box-shadow:0 0 20px rgba(16,185,129,.6)}
+}
+#panel-ocr .lens-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+  padding:10px 14px;border-top:1px solid var(--border);
+  background:var(--surface-solid);
+}
+#panel-ocr .lens-hint{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+#panel-ocr .lens-hint svg{width:14px;height:14px;color:var(--primary-text)}
+#panel-ocr .preview-remove{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:8px;border:none;background:rgba(15,23,42,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);backdrop-filter:blur(8px);z-index:10}
+#panel-ocr .preview-remove:hover{background:rgba(239,68,68,.9);transform:rotate(90deg)}
+#panel-ocr .preview-remove svg{width:16px;height:16px}
+#panel-ocr .preview-meta{padding:10px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+#panel-ocr .preview-meta strong{color:var(--text)}
+#panel-ocr .progress-wrap{margin-top:14px;display:none;animation:panelIn .35s ease}
+#panel-ocr .progress-wrap.show{display:block}
+#panel-ocr .progress-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:6px}
+#panel-ocr .progress-label strong{color:var(--primary-text);font-weight:700}
+#panel-ocr .progress-bar{height:8px;border-radius:6px;background:var(--border);overflow:hidden;position:relative}
+#panel-ocr .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#10b981,#06b6d4,#8b5cf6);background-size:200% 100%;border-radius:6px;transition:width .25s ease;animation:ocrProgressShine 2s linear infinite}
+@keyframes ocrProgressShine{0%{background-position:0% 0}100%{background-position:200% 0}}
+#panel-ocr .lang-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:var(--primary-light);border:1px solid var(--primary);color:var(--primary-text);font-size:13px;font-weight:700;margin-top:8px}
+#panel-ocr .lang-badge svg{width:16px;height:16px}
+#panel-ocr .hint{margin-top:8px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- ANIMATED BG -->
+<div class="bg-glow">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </div>
+      <span class="brand-text">Nexitool Pro</span>
+    </a>
+    <div class="nav-actions">
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
+        <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Professional Online <span>Text &amp; Email Tools</span></h1>
+  <p>Find email patterns, convert text cases, and transform numbers to words — all in one place, right in your browser.</p>
+</section>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab-list">
+    <button class="tab-btn active" onclick="switchTab('email')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      Email Finder
+    </button>
+    <button class="tab-btn" onclick="switchTab('case')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+      Case Converter
+    </button>
+    <button class="tab-btn" onclick="switchTab('numbers')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+      Num to Words
+    </button>
+    <button class="tab-btn" onclick="switchTab('ocr')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 8h2M7 12h2M7 16h2M13 8h4M13 12h4M13 16h4"></path></svg>
+      Image to Text
+    </button>
+  </div>
+
+  <!-- EMAIL FINDER -->
+  <div class="tab-panel active" id="panel-email">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon emerald">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </div>
+        <div>
+          <div class="card-title">Email Pattern Finder</div>
+          <div class="card-desc">Generate common corporate email formats instantly</div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div>
+          <label class="field-label">First Name</label>
+          <input type="text" id="ef-first" placeholder="John">
+        </div>
+        <div>
+          <label class="field-label">Last Name</label>
+          <input type="text" id="ef-last" placeholder="Doe">
+        </div>
+        <div>
+          <label class="field-label">Company Domain</label>
+          <input type="text" id="ef-domain" placeholder="company.com">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="generateEmails()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Generate Patterns
+        </button>
+        <button class="btn btn-outline" id="ef-copyAll" onclick="copyAllEmails()" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy All
+        </button>
+        <button class="btn btn-ghost" onclick="clearEmailFinder()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Clear
+        </button>
+      </div>
+      <div id="ef-detect" class="domain-detect"></div>
+      <div id="ef-stats" class="email-stats" style="display:none"></div>
+      <div id="ef-results" class="email-list" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- CASE CONVERTER -->
+  <div class="tab-panel" id="panel-case">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon violet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+        </div>
+        <div>
+          <div class="card-title">Text Case Converter</div>
+          <div class="card-desc">Transform text between different cases instantly</div>
+        </div>
+      </div>
+      <textarea id="cc-text" placeholder="Type or paste your text here..."></textarea>
+      <div class="text-stats">
+        <span><strong id="cc-chars">0</strong> chars</span>
+        <span><strong id="cc-words">0</strong> words</span>
+        <span><strong id="cc-lines">0</strong> lines</span>
+        <span><strong id="cc-sentences">0</strong> sentences</span>
+      </div>
+      <div class="case-row">
+        <button class="case-btn" onclick="convertCase('sentence')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"></path><path d="M9 4l-5 16"></path><path d="M15 4l5 16"></path></svg>Sentence</button>
+        <button class="case-btn" onclick="convertCase('lower')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M7 14v-3a5 5 0 0 1 10 0v3"></path></svg>lower</button>
+        <button class="case-btn" onclick="convertCase('upper')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"></line><path d="M7 10v-3a5 5 0 0 1 10 0v3"></path></svg>UPPER</button>
+        <button class="case-btn" onclick="convertCase('capitalized')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"></path><path d="M9 20h6"></path><path d="M12 4v16"></path></svg>Capitalized</button>
+        <button class="case-btn" onclick="convertCase('title')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"></path><path d="M9 20h6"></path><path d="M12 4v16"></path></svg>Title</button>
+        <button class="case-btn" onclick="convertCase('alternating')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 3 4 21"></polyline><polyline points="16 3 20 21"></polyline></svg>aLtErNaTiNg</button>
+        <button class="case-btn" onclick="convertCase('inverse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h4"></path><polyline points="7 23 3 19"></polyline><path d="M21 13v2a4 4 0 0 1-4 4h-4"></path></svg>InVeRsE</button>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-outline" onclick="copyText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy
+        </button>
+        <button class="btn btn-outline" onclick="downloadText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download
+        </button>
+        <button class="btn btn-danger" onclick="clearText()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUMBERS TO WORDS -->
+  <div class="tab-panel" id="panel-numbers">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+        </div>
+        <div>
+          <div class="card-title">Numbers to Words</div>
+          <div class="card-desc">Convert numbers to words, currency or check format</div>
+        </div>
+      </div>
+      <div class="num-layout">
+        <div>
+          <label class="field-label">Number</label>
+          <input type="text" id="nw-input" placeholder="e.g. 617,224.47" style="font-size:16px;font-family:monospace;margin-bottom:14px" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')" inputmode="decimal">
+          <label class="field-label">Conversion Mode</label>
+          <div class="mode-grid" style="margin-bottom:14px">
+            <button class="mode-btn active" onclick="setNumMode(this,'words')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+              <span class="mode-label">Words</span>
+            </button>
+            <button class="mode-btn" onclick="setNumMode(this,'currency')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <span class="mode-label">Currency</span>
+            </button>
+            <button class="mode-btn" onclick="setNumMode(this,'check')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+              <span class="mode-label">Check</span>
+            </button>
+          </div>
+          <label class="field-label">Output Case</label>
+          <select id="nw-case">
+            <option value="title">Title Case</option>
+            <option value="sentence">Sentence Case</option>
+            <option value="lower">lower case</option>
+            <option value="upper">UPPER CASE</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Result</label>
+          <div class="result-box empty" id="nw-result">Enter a number to see the conversion</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCR IMAGE TO TEXT -->
+  <div class="tab-panel" id="panel-ocr">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon emerald">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 8h2M7 12h2M7 16h2M13 8h4M13 12h4M13 16h4"></path></svg>
+        </div>
+        <div>
+          <div class="card-title">Image to Text (OCR)</div>
+          <div class="card-desc">Extract English text from images &mdash; fast, private, runs entirely in your browser</div>
+        </div>
+      </div>
+
+      <div class="ocr-options">
+        <div class="option-card">
+          <label class="field-label">Language</label>
+          <div class="lang-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            English
+          </div>
+          <div class="hint">Currently supporting English text only. More languages may be added in future versions.</div>
+        </div>
+        <div class="option-card">
+          <label class="field-label">Output Mode</label>
+          <div class="lang-grid">
+            <button class="lang-chip active" data-ocr-mode="standard">Standard</button>
+            <button class="lang-chip" data-ocr-mode="layout">Preserve Layout</button>
+            <button class="lang-chip" data-ocr-mode="raw">Raw</button>
+          </div>
+          <label class="field-label" style="margin-top:14px">Image Preprocessing</label>
+          <div class="lang-grid">
+            <button class="lang-chip active" data-ocr-preprocess="auto">Auto</button>
+            <button class="lang-chip" data-ocr-preprocess="grayscale">Grayscale</button>
+            <button class="lang-chip" data-ocr-preprocess="contrast">High Contrast</button>
+            <button class="lang-chip" data-ocr-preprocess="none">None</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropzone" id="ocrDropzone" onclick="document.getElementById('ocrFileInput').click()">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </div>
+        <div class="dropzone-title">Drop image here or click to upload</div>
+        <div class="dropzone-desc">Supports <strong>PNG, JPG, JPEG, JFIF, WebP, BMP, GIF</strong> &middot; Max 10 MB &middot; Processed locally in your browser</div>
+        <input type="file" id="ocrFileInput" accept="image/png,image/jpeg,image/jfif,.jfif,.jpg,.jpeg,image/webp,image/bmp,image/gif">
+      </div>
+
+      <!-- Paste button: visible alternative to keyboard Ctrl+V -->
+      <div class="paste-row">
+        <button type="button" class="btn btn-outline paste-btn" onclick="ocrPasteFromClipboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          Paste from Clipboard
+        </button>
+        <span class="paste-hint">or just press <kbd>Ctrl</kbd>+<kbd>V</kbd> / <kbd>&#8984;</kbd>+<kbd>V</kbd></span>
+      </div>
+
+      <div class="preview-wrap" id="ocrPreviewWrap">
+        <div class="preview-stage">
+          <div class="preview-img-wrap">
+            <img id="ocrPreviewImg" alt="Preview">
+            <div class="lens-overlay" id="ocrLensOverlay"></div>
+          </div>
+        </div>
+        <button class="preview-remove" onclick="ocrClearImage()" title="Remove image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="preview-meta">
+          <span><strong id="ocrPreviewName">image.png</strong></span>
+          <span><span id="ocrPreviewSize">0 KB</span> &middot; <span id="ocrPreviewDim">&mdash;</span></span>
+        </div>
+        <div class="lens-toolbar" id="ocrLensToolbar" style="display:none">
+          <span class="lens-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-6 0v4"></path><rect x="2" y="9" width="20" height="12" rx="2" ry="2"></rect></svg>
+            Click any highlighted word to copy it
+          </span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrSelectAllWords()">Select All</button>
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrCopyAllWords()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Copy All
+            </button>
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrToggleBoxes()" id="ocrToggleBoxesBtn">Hide Boxes</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-wrap" id="ocrProgressWrap">
+        <div class="progress-label">
+          <span id="ocrProgressStatus">Initializing OCR engine&hellip;</span>
+          <strong id="ocrProgressPct">0%</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="ocrProgressFill"></div></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" id="ocrExtractBtn" onclick="ocrRun()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 16l4-4 4 4 5-5"></path></svg>
+          Extract Text
+        </button>
+        <button class="btn btn-outline" id="ocrCopyBtn" onclick="ocrCopy()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy
+        </button>
+        <button class="btn btn-outline" id="ocrDownloadBtn" onclick="ocrDownload()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download .txt
+        </button>
+        <button class="btn btn-danger" onclick="ocrClearAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+
+      <textarea id="ocrResult" placeholder="Extracted text will appear here&hellip; You can edit it before copying or downloading." readonly></textarea>
+      <div class="text-stats">
+        <span><strong id="ocrChars">0</strong> chars</span>
+        <span><strong id="ocrWords">0</strong> words</span>
+        <span><strong id="ocrLines">0</strong> lines</span>
+        <span id="ocrConfidence" style="display:none">Confidence: <strong>&mdash;</strong></span>
+        <span id="ocrTime" style="display:none">Time: <strong>&mdash;</strong></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Made with</span>
+    <span class="footer-heart">❤️</span>
+    <span>by Nexithon Night Team</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast-container" id="toasts"></div>
+
+<script>
+/* ===== THEME ===== */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const dark=document.body.classList.contains('dark');
+  document.getElementById('icon-moon').style.display=dark?'none':'block';
+  document.getElementById('icon-sun').style.display=dark?'block':'none';
+  localStorage.setItem('nexitool-theme',dark?'dark':'light');
+}
+(function initTheme(){
+  const saved=localStorage.getItem('nexitool-theme');
+  if(saved==='dark'||(!saved&&window.matchMedia('(prefers-color-scheme:dark)').matches)){
+    document.body.classList.add('dark');
+    document.getElementById('icon-moon').style.display='none';
+    document.getElementById('icon-sun').style.display='block';
+  }
+})();
+
+/* ===== TABS ===== */
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers','ocr'][i]===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+/* ===== TOAST ===== */
+function showToast(title,desc,icon){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');t.className='toast';
+  let svg,iconCls='';
+  if(icon==='check'){
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  }else if(icon==='error'){
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    iconCls=' error';
+  }else{
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+  }
+  t.innerHTML=`<div class="toast-icon${iconCls}">${svg}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),250)},2800);
+}
+
+/* ===== CLIPBOARD ===== */
+async function copyToClipboard(text){try{await navigator.clipboard.writeText(text);return true}catch{return false}}
+
+/* ===== EMAIL FINDER ===== */
+let emailData=[];
+let detectedPatternIndex=-1;
+// Priority order based on Hunter.io / Prospeo.io data
+// High: ~48-56% of 1000+ employee companies | Medium: ~15-30% | Low: <10%
+const patternLabels=['firstname.lastname','f.lastname','firstname','flastname','firstnamelastname','firstnamel','firstname.l','lastname.firstname','l.firstname','firstname_lastname','lastnamefirstname','f.l','fl','firstname-lastname','lastname_firstname','lastname','f_lastname','f-lastname','lastname_f','lastname-f','lf','lastnamef','lastname-firstname','l.f','lastname.f','l.lastname','lfirstname','f_l','l_f','f-l','l-f','l_firstname','l-firstname','l_lastname','l-lastname'];
+const patternPriority=['high','high','high','high','medium','medium','medium','medium','medium','medium','medium','medium','medium','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low','low'];
+
+// ===== COMPANY DOMAIN DATABASE (USA & UK ONLY) =====
+// Sources: Hunter.io, Prospeo.io, LeadIQ, RocketReach, public data
+// Confidence: "verified" = confirmed from multiple sources | "likely" = from 1-2 sources | "guessed" = industry pattern
+const companyDB={
+  // ── USA: BIG TECH ──
+  "google.com":{p:"firstname.lastname",c:"verified",n:"Google"},
+  "alphabet.com":{p:"firstname.lastname",c:"verified",n:"Alphabet"},
+  "microsoft.com":{p:"firstname.lastname",c:"verified",n:"Microsoft"},
+  "apple.com":{p:"firstname.lastname",c:"verified",n:"Apple"},
+  "amazon.com":{p:"firstname_lastname",c:"verified",n:"Amazon"},
+  "meta.com":{p:"firstname.lastname",c:"verified",n:"Meta"},
+  "facebook.com":{p:"firstname.lastname",c:"verified",n:"Facebook"},
+  "instagram.com":{p:"firstname.lastname",c:"likely",n:"Instagram"},
+  "whatsapp.com":{p:"firstname.lastname",c:"likely",n:"WhatsApp"},
+  "netflix.com":{p:"flastname",c:"verified",n:"Netflix"},
+  "linkedin.com":{p:"flastname",c:"verified",n:"LinkedIn"},
+  "twitter.com":{p:"flastname",c:"verified",n:"Twitter/X"},
+  "x.com":{p:"flastname",c:"likely",n:"X"},
+  "uber.com":{p:"firstname.lastname",c:"verified",n:"Uber"},
+  "airbnb.com":{p:"firstname.lastname",c:"verified",n:"Airbnb"},
+  "stripe.com":{p:"firstname.lastname",c:"verified",n:"Stripe"},
+  "slack.com":{p:"firstname.lastname",c:"verified",n:"Slack"},
+  "salesforce.com":{p:"firstname.lastname",c:"verified",n:"Salesforce"},
+  "adobe.com":{p:"firstname.lastname",c:"verified",n:"Adobe"},
+  "oracle.com":{p:"firstname.lastname",c:"verified",n:"Oracle"},
+  "ibm.com":{p:"firstname.lastname",c:"verified",n:"IBM"},
+  "intel.com":{p:"firstname.lastname",c:"verified",n:"Intel"},
+  "nvidia.com":{p:"flastname",c:"verified",n:"NVIDIA"},
+  "amd.com":{p:"firstname.lastname",c:"likely",n:"AMD"},
+  "qualcomm.com":{p:"firstname.lastname",c:"verified",n:"Qualcomm"},
+  "cisco.com":{p:"flastname",c:"verified",n:"Cisco"},
+  "dell.com":{p:"firstname_lastname",c:"verified",n:"Dell"},
+  "hp.com":{p:"firstname.lastname",c:"verified",n:"HP"},
+  "vmware.com":{p:"flastname",c:"verified",n:"VMware"},
+  "servicenow.com":{p:"firstname.lastname",c:"verified",n:"ServiceNow"},
+  "dropbox.com":{p:"flastname",c:"likely",n:"Dropbox"},
+  "paypal.com":{p:"firstname.lastname",c:"verified",n:"PayPal"},
+  "zoom.us":{p:"firstname.lastname",c:"verified",n:"Zoom"},
+  "twilio.com":{p:"firstname.lastname",c:"verified",n:"Twilio"},
+  "cloudflare.com":{p:"firstname.lastname",c:"verified",n:"Cloudflare"},
+  "datadog.com":{p:"firstname.lastname",c:"verified",n:"Datadog"},
+  "snowflake.com":{p:"firstname.lastname",c:"verified",n:"Snowflake"},
+  "mongodb.com":{p:"firstname.lastname",c:"verified",n:"MongoDB"},
+  "confluent.io":{p:"firstname.lastname",c:"likely",n:"Confluent"},
+  "databricks.com":{p:"firstname.lastname",c:"verified",n:"Databricks"},
+  "palantir.com":{p:"flastname",c:"likely",n:"Palantir"},
+  "openai.com":{p:"firstname.lastname",c:"likely",n:"OpenAI"},
+  "anthropic.com":{p:"firstname.lastname",c:"likely",n:"Anthropic"},
+  "roblox.com":{p:"firstname.lastname",c:"verified",n:"Roblox"},
+  "snap.com":{p:"firstname.lastname",c:"verified",n:"Snap Inc."},
+  "pinterest.com":{p:"firstname.lastname",c:"verified",n:"Pinterest"},
+  "reddit.com":{p:"firstname.lastname",c:"likely",n:"Reddit"},
+  "yelp.com":{p:"firstname.lastname",c:"verified",n:"Yelp"},
+  "craigslist.org":{p:"flastname",c:"likely",n:"Craigslist"},
+  // ── USA: SAAS / STARTUPS ──
+  "shopify.com":{p:"firstname.lastname",c:"verified",n:"Shopify"},
+  "notion.so":{p:"firstname.lastname",c:"likely",n:"Notion"},
+  "figma.com":{p:"firstname.lastname",c:"verified",n:"Figma"},
+  "grammarly.com":{p:"firstname.lastname",c:"verified",n:"Grammarly"},
+  "linear.app":{p:"firstname.lastname",c:"likely",n:"Linear"},
+  "vercel.com":{p:"firstname.lastname",c:"likely",n:"Vercel"},
+  "netlify.com":{p:"firstname.lastname",c:"likely",n:"Netlify"},
+  "gitlab.com":{p:"firstname.lastname",c:"verified",n:"GitLab"},
+  "github.com":{p:"flastname",c:"likely",n:"GitHub"},
+  "hashicorp.com":{p:"firstname.lastname",c:"verified",n:"HashiCorp"},
+  "elastic.co":{p:"firstname.lastname",c:"verified",n:"Elastic"},
+  "grafana.com":{p:"firstname.lastname",c:"likely",n:"Grafana Labs"},
+  "newrelic.com":{p:"firstname.lastname",c:"verified",n:"New Relic"},
+  "splunk.com":{p:"flastname",c:"verified",n:"Splunk"},
+  "pagerduty.com":{p:"firstname.lastname",c:"verified",n:"PagerDuty"},
+  "okta.com":{p:"firstname.lastname",c:"verified",n:"Okta"},
+  "auth0.com":{p:"firstname.lastname",c:"likely",n:"Auth0"},
+  "sendgrid.com":{p:"firstname.lastname",c:"likely",n:"SendGrid"},
+  "hubspot.com":{p:"flastname",c:"verified",n:"HubSpot"},
+  "marketo.com":{p:"firstname.lastname",c:"verified",n:"Marketo"},
+  "mailchimp.com":{p:"firstname.lastname",c:"likely",n:"Mailchimp"},
+  "segment.com":{p:"firstname.lastname",c:"likely",n:"Segment"},
+  "mulesoft.com":{p:"firstname.lastname",c:"verified",n:"MuleSoft"},
+  "zapier.com":{p:"firstname.lastname",c:"likely",n:"Zapier"},
+  "airtable.com":{p:"firstname.lastname",c:"likely",n:"Airtable"},
+  "monday.com":{p:"firstname.lastname",c:"likely",n:"Monday.com"},
+  "asana.com":{p:"firstname.lastname",c:"verified",n:"Asana"},
+  "clickup.com":{p:"firstname.lastname",c:"likely",n:"ClickUp"},
+  "webflow.com":{p:"firstname.lastname",c:"likely",n:"Webflow"},
+  "squarespace.com":{p:"firstname.lastname",c:"likely",n:"Squarespace"},
+  "wix.com":{p:"firstname.lastname",c:"verified",n:"Wix"},
+  "atlassian.com":{p:"firstname.lastname",c:"verified",n:"Atlassian"},
+  "canva.com":{p:"firstname.lastname",c:"verified",n:"Canva"},
+  "fivetran.com":{p:"firstname.lastname",c:"likely",n:"Fivetran"},
+  "plaid.com":{p:"firstname.lastname",c:"likely",n:"Plaid"},
+  "brex.com":{p:"firstname.lastname",c:"likely",n:"Brex"},
+  "rivian.com":{p:"firstname.lastname",c:"likely",n:"Rivian"},
+  // ── USA: CONSULTING / BIG 4 ──
+  "mckinsey.com":{p:"flastname",c:"verified",n:"McKinsey"},
+  "bcg.com":{p:"flastname",c:"verified",n:"BCG"},
+  "bain.com":{p:"flastname",c:"verified",n:"Bain & Company"},
+  "deloitte.com":{p:"flastname",c:"verified",n:"Deloitte"},
+  "ey.com":{p:"firstname.lastname",c:"verified",n:"EY"},
+  "pwc.com":{p:"firstname.lastname",c:"verified",n:"PwC"},
+  "kpmg.com":{p:"firstname.lastname",c:"verified",n:"KPMG"},
+  "accenture.com":{p:"firstname.lastname",c:"verified",n:"Accenture"},
+  "kearney.com":{p:"flastname",c:"likely",n:"Kearney"},
+  "oliverwyman.com":{p:"firstname.lastname",c:"likely",n:"Oliver Wyman"},
+  "boozallen.com":{p:"firstname.lastname",c:"verified",n:"Booz Allen"},
+  // ── USA: BANKING / FINANCE ──
+  "jpmorgan.com":{p:"f.lastname",c:"verified",n:"JPMorgan Chase"},
+  "jpmchase.com":{p:"f.lastname",c:"verified",n:"JPMorgan Chase"},
+  "gs.com":{p:"f.lastname",c:"verified",n:"Goldman Sachs"},
+  "morganstanley.com":{p:"f.lastname",c:"verified",n:"Morgan Stanley"},
+  "citi.com":{p:"flastname",c:"verified",n:"Citigroup"},
+  "citibank.com":{p:"flastname",c:"verified",n:"Citibank"},
+  "bankofamerica.com":{p:"firstname.lastname",c:"verified",n:"Bank of America"},
+  "wellsfargo.com":{p:"firstname.lastname",c:"verified",n:"Wells Fargo"},
+  "blackstone.com":{p:"f.lastname",c:"verified",n:"Blackstone"},
+  "blackrock.com":{p:"f.lastname",c:"verified",n:"BlackRock"},
+  "citadel.com":{p:"f.lastname",c:"likely",n:"Citadel"},
+  "bridgewater.com":{p:"f.lastname",c:"likely",n:"Bridgewater"},
+  "kkr.com":{p:"f.lastname",c:"likely",n:"KKR"},
+  "centerviewpartners.com":{p:"f.lastname",c:"likely",n:"Centerview"},
+  "lazard.com":{p:"f.lastname",c:"verified",n:"Lazard"},
+  "evercore.com":{p:"f.lastname",c:"likely",n:"Evercore"},
+  "moelis.com":{p:"f.lastname",c:"likely",n:"Moelis"},
+  "pjt.com":{p:"f.lastname",c:"likely",n:"PJ Partners"},
+  "visa.com":{p:"firstname.lastname",c:"verified",n:"Visa"},
+  "mastercard.com":{p:"firstname.lastname",c:"verified",n:"Mastercard"},
+  "fidelity.com":{p:"f.lastname",c:"verified",n:"Fidelity"},
+  "vanguard.com":{p:"f.lastname",c:"likely",n:"Vanguard"},
+  "schwab.com":{p:"firstname.lastname",c:"verified",n:"Charles Schwab"},
+  "amex.com":{p:"f.lastname",c:"verified",n:"American Express"},
+  "aexp.com":{p:"f.lastname",c:"verified",n:"Amex"},
+  // ── USA: INSURANCE ──
+  "prudential.com":{p:"firstname.lastname",c:"verified",n:"Prudential"},
+  "metlife.com":{p:"firstname.lastname",c:"verified",n:"MetLife"},
+  "aig.com":{p:"firstname.lastname",c:"verified",n:"AIG"},
+  "travelers.com":{p:"firstname.lastname",c:"verified",n:"Travelers"},
+  "chubb.com":{p:"firstname.lastname",c:"verified",n:"Chubb"},
+  "progressive.com":{p:"firstname.lastname",c:"verified",n:"Progressive"},
+  "libertymutual.com":{p:"f.lastname",c:"likely",n:"Liberty Mutual"},
+  "geico.com":{p:"f.lastname",c:"likely",n:"GEICO"},
+  "statefarm.com":{p:"f.lastname",c:"likely",n:"State Farm"},
+  // ── USA: ENERGY / OIL ──
+  "exxonmobil.com":{p:"firstname.lastname",c:"verified",n:"ExxonMobil"},
+  "chevron.com":{p:"firstname.lastname",c:"verified",n:"Chevron"},
+  "conocophillips.com":{p:"firstname.lastname",c:"verified",n:"ConocoPhillips"},
+  "occidentalpetroleum.com":{p:"firstname.lastname",c:"likely",n:"Oxy"},
+  "nexteraenergy.com":{p:"firstname.lastname",c:"verified",n:"NextEra"},
+  "duke-energy.com":{p:"firstname.lastname",c:"likely",n:"Duke Energy"},
+  " Dominionenergy.com":{p:"f.lastname",c:"likely",n:"Dominion Energy"},
+  // ── USA: HEALTHCARE / PHARMA ──
+  "pfizer.com":{p:"firstname.lastname",c:"verified",n:"Pfizer"},
+  "johnsonandjohnson.com":{p:"firstname.lastname",c:"verified",n:"J&J"},
+  "jnj.com":{p:"firstname.lastname",c:"verified",n:"J&J"},
+  "merck.com":{p:"firstname.lastname",c:"verified",n:"Merck"},
+  "abbvie.com":{p:"firstname.lastname",c:"verified",n:"AbbVie"},
+  "moderna.com":{p:"firstname.lastname",c:"verified",n:"Moderna"},
+  "unitedhealthgroup.com":{p:"f.lastname",c:"verified",n:"UnitedHealth"},
+  "uhc.com":{p:"f.lastname",c:"verified",n:"UHC"},
+  "cvshealth.com":{p:"firstname.lastname",c:"verified",n:"CVS Health"},
+  "mckesson.com":{p:"f.lastname",c:"verified",n:"McKesson"},
+  "cigna.com":{p:"f.lastname",c:"verified",n:"Cigna"},
+  "anthem.com":{p:"f.lastname",c:"verified",n:"Anthem"},
+  "elevancehealth.com":{p:"f.lastname",c:"likely",n:"Elevance"},
+  "hcahealthcare.com":{p:"firstname.lastname",c:"verified",n:"HCA Healthcare"},
+  "labcorp.com":{p:"firstname.lastname",c:"verified",n:"Labcorp"},
+  "questdiagnostics.com":{p:"f.lastname",c:"verified",n:"Quest Diagnostics"},
+  "bms.com":{p:"firstname.lastname",c:"verified",n:"Bristol-Myers Squibb"},
+  "lilly.com":{p:"f.lastname",c:"verified",n:"Eli Lilly"},
+  "amgen.com":{p:"firstname.lastname",c:"verified",n:"Amgen"},
+  "gilead.com":{p:"firstname.lastname",c:"verified",n:"Gilead"},
+  "biogen.com":{p:"firstname.lastname",c:"verified",n:"Biogen"},
+  "regeneron.com":{p:"f.lastname",c:"verified",n:"Regeneron"},
+  "vertexpharma.com":{p:"firstname.lastname",c:"likely",n:"Vertex Pharma"},
+  // ── USA: AEROSPACE / DEFENSE ──
+  "boeing.com":{p:"flastname",c:"verified",n:"Boeing"},
+  "lockheedmartin.com":{p:"firstname.lastname",c:"verified",n:"Lockheed Martin"},
+  "raytheon.com":{p:"firstname.lastname",c:"verified",n:"Raytheon"},
+  "rtx.com":{p:"firstname.lastname",c:"verified",n:"RTX"},
+  "northropgrumman.com":{p:"f.lastname",c:"verified",n:"Northrop Grumman"},
+  "generaldynamics.com":{p:"f.lastname",c:"verified",n:"General Dynamics"},
+  "spacex.com":{p:"firstname.lastname",c:"likely",n:"SpaceX"},
+  "leidos.com":{p:"f.lastname",c:"verified",n:"Leidos"},
+  "l3harris.com":{p:"f.lastname",c:"verified",n:"L3Harris"},
+  // ── USA: RETAIL / FMCG ──
+  "walmart.com":{p:"firstname.lastname",c:"verified",n:"Walmart"},
+  "target.com":{p:"firstname.lastname",c:"verified",n:"Target"},
+  "costco.com":{p:"flastname",c:"verified",n:"Costco"},
+  "pg.com":{p:"firstname.lastname",c:"verified",n:"Procter & Gamble"},
+  "pepsico.com":{p:"firstname.lastname",c:"verified",n:"PepsiCo"},
+  "coca-cola.com":{p:"firstname.lastname",c:"verified",n:"Coca-Cola"},
+  "nike.com":{p:"firstname.lastname",c:"verified",n:"Nike"},
+  "starbucks.com":{p:"firstname.lastname",c:"verified",n:"Starbucks"},
+  "mcdonalds.com":{p:"firstname.lastname",c:"verified",n:"McDonald's"},
+  "dominos.com":{p:"firstname.lastname",c:"likely",n:"Domino's"},
+  "homedepot.com":{p:"f.lastname",c:"verified",n:"Home Depot"},
+  "lowes.com":{p:"f.lastname",c:"verified",n:"Lowe's"},
+  "bestbuy.com":{p:"f.lastname",c:"likely",n:"Best Buy"},
+  "kroger.com":{p:"f.lastname",c:"likely",n:"Kroger"},
+  "walgreens.com":{p:"f.lastname",c:"verified",n:"Walgreens"},
+  "cvs.com":{p:"f.lastname",c:"verified",n:"CVS"},
+  "tjx.com":{p:"f.lastname",c:"likely",n:"TJX Companies"},
+  "gap.com":{p:"firstname.lastname",c:"likely",n:"Gap"},
+  "tiffanys.com":{p:"f.lastname",c:"likely",n:"Tiffany & Co."},
+  // ── USA: TELECOM ──
+  "verizon.com":{p:"firstname.lastname",c:"verified",n:"Verizon"},
+  "att.com":{p:"flastname",c:"verified",n:"AT&T"},
+  "t-mobile.com":{p:"firstname.lastname",c:"verified",n:"T-Mobile"},
+  "comcast.com":{p:"f.lastname",c:"verified",n:"Comcast"},
+  "chartercom.com":{p:"f.lastname",c:"likely",n:"Charter"},
+  // ── USA: AUTOMOBILE ──
+  "tesla.com":{p:"firstname.lastname",c:"verified",n:"Tesla"},
+  "ford.com":{p:"firstname.lastname",c:"verified",n:"Ford"},
+  "gm.com":{p:"firstname.lastname",c:"verified",n:"General Motors"},
+  // ── USA: LOGISTICS ──
+  "fedex.com":{p:"flastname",c:"verified",n:"FedEx"},
+  "ups.com":{p:"firstname.lastname",c:"verified",n:"UPS"},
+  // ── USA: MEDIA / ENTERTAINMENT ──
+  "disney.com":{p:"firstname.lastname",c:"verified",n:"Disney"},
+  "warnerbros.com":{p:"firstname.lastname",c:"verified",n:"Warner Bros"},
+  "paramount.com":{p:"firstname.lastname",c:"verified",n:"Paramount"},
+  "nbcuniversal.com":{p:"firstname.lastname",c:"verified",n:"NBCUniversal"},
+  "nyt.com":{p:"f.lastname",c:"verified",n:"NY Times"},
+  "nytimes.com":{p:"f.lastname",c:"verified",n:"NY Times"},
+  "wsj.com":{p:"f.lastname",c:"verified",n:"Wall Street Journal"},
+  "bloomberg.com":{p:"f.lastname",c:"verified",n:"Bloomberg"},
+  "washingtonpost.com":{p:"f.lastname",c:"likely",n:"Washington Post"},
+  // ── USA: CONSUMER TECH ──
+  "logitech.com":{p:"firstname.lastname",c:"verified",n:"Logitech"},
+  "fitbit.com":{p:"firstname.lastname",c:"likely",n:"Fitbit"},
+  "roku.com":{p:"firstname.lastname",c:"verified",n:"Roku"},
+  "sonos.com":{p:"firstname.lastname",c:"likely",n:"Sonos"},
+  // ── USA: FOOD DELIVERY ──
+  "doordash.com":{p:"firstname.lastname",c:"likely",n:"DoorDash"},
+  "grubhub.com":{p:"firstname.lastname",c:"likely",n:"GrubHub"},
+  "ubereats.com":{p:"firstname.lastname",c:"likely",n:"Uber Eats"},
+  "instacart.com":{p:"firstname.lastname",c:"likely",n:"Instacart"},
+  // ── USA: CRYPTO / FINTECH ──
+  "coinbase.com":{p:"firstname.lastname",c:"verified",n:"Coinbase"},
+  "ripple.com":{p:"firstname.lastname",c:"verified",n:"Ripple"},
+  "blockfi.com":{p:"firstname.lastname",c:"likely",n:"BlockFi"},
+  "chime.com":{p:"firstname.lastname",c:"likely",n:"Chime"},
+  "sofi.com":{p:"firstname.lastname",c:"verified",n:"SoFi"},
+  "robinhood.com":{p:"firstname.lastname",c:"likely",n:"Robinhood"},
+  "squareup.com":{p:"firstname.lastname",c:"verified",n:"Square"},
+  "affirm.com":{p:"firstname.lastname",c:"likely",n:"Affirm"},
+  // ── USA: EDUCATION ──
+  "harvard.edu":{p:"f.lastname",c:"verified",n:"Harvard"},
+  "mit.edu":{p:"f.lastname",c:"verified",n:"MIT"},
+  "stanford.edu":{p:"f.lastname",c:"verified",n:"Stanford"},
+  "yale.edu":{p:"f.lastname",c:"verified",n:"Yale"},
+  "princeton.edu":{p:"f.lastname",c:"verified",n:"Princeton"},
+  "columbia.edu":{p:"f.lastname",c:"verified",n:"Columbia"},
+  "uchicago.edu":{p:"f.lastname",c:"verified",n:"UChicago"},
+  "caltech.edu":{p:"f.lastname",c:"verified",n:"Caltech"},
+  "berkeley.edu":{p:"f.lastname",c:"verified",n:"UC Berkeley"},
+  "wharton.upenn.edu":{p:"f.lastname",c:"verified",n:"Wharton"},
+  // ── USA: GAMING ──
+  "ea.com":{p:"firstname.lastname",c:"verified",n:"EA"},
+  "activision.com":{p:"firstname.lastname",c:"verified",n:"Activision"},
+  "epicgames.com":{p:"firstname.lastname",c:"likely",n:"Epic Games"},
+  "take2games.com":{p:"f.lastname",c:"likely",n:"Take-Two"},
+  "twitch.tv":{p:"firstname.lastname",c:"likely",n:"Twitch"},
+  // ── USA: INDUSTRIAL ──
+  "ge.com":{p:"firstname.lastname",c:"verified",n:"GE"},
+  "3m.com":{p:"firstname.lastname",c:"verified",n:"3M"},
+  "caterpillar.com":{p:"firstname.lastname",c:"verified",n:"Caterpillar"},
+  "honeywell.com":{p:"flastname",c:"verified",n:"Honeywell"},
+  "deere.com":{p:"f.lastname",c:"verified",n:"John Deere"},
+  "emerson.com":{p:"f.lastname",c:"verified",n:"Emerson"},
+  "eaton.com":{p:"f.lastname",c:"verified",n:"Eaton"},
+  "parker.com":{p:"f.lastname",c:"likely",n:"Parker Hannifin"},
+  "illuminat.com":{p:"f.lastname",c:"likely",n:"Illumina"},
+  "danaher.com":{p:"f.lastname",c:"verified",n:"Danaher"},
+  // ── USA: TRAVEL / HOSPITALITY ──
+  "booking.com":{p:"firstname.lastname",c:"verified",n:"Booking.com"},
+  "expedia.com":{p:"firstname.lastname",c:"verified",n:"Expedia"},
+  "marriott.com":{p:"f.lastname",c:"verified",n:"Marriott"},
+  "hilton.com":{p:"f.lastname",c:"verified",n:"Hilton"},
+  "hyatt.com":{p:"f.lastname",c:"verified",n:"Hyatt"},
+  "delta.com":{p:"f.lastname",c:"verified",n:"Delta Airlines"},
+  "united.com":{p:"f.lastname",c:"verified",n:"United Airlines"},
+  "aa.com":{p:"f.lastname",c:"verified",n:"American Airlines"},
+  "southwest.com":{p:"f.lastname",c:"verified",n:"Southwest"},
+  "jetblue.com":{p:"f.lastname",c:"likely",n:"JetBlue"},
+  // ── UK: BANKING / FINANCE ──
+  "hsbc.com":{p:"firstname.lastname",c:"verified",n:"HSBC"},
+  "barclays.com":{p:"firstname.lastname",c:"verified",n:"Barclays"},
+  "natwestgroup.com":{p:"f.lastname",c:"verified",n:"NatWest Group"},
+  "standardchartered.com":{p:"firstname.lastname",c:"verified",n:"Standard Chartered"},
+  "schroders.com":{p:"f.lastname",c:"verified",n:"Schroders"},
+  "abrdn.com":{p:"f.lastname",c:"likely",n:"abrdn"},
+  "hargreaveslansdown.co.uk":{p:"f.lastname",c:"likely",n:"Hargreaves Lansdown"},
+  // ── UK: CONSULTING / PROFESSIONAL ──
+  "capgemini.com":{p:"firstname.lastname",c:"verified",n:"Capgemini"},
+  "rolandberger.com":{p:"firstname.lastname",c:"likely",n:"Roland Berger"},
+  "wsp.com":{p:"firstname.lastname",c:"likely",n:"WSP"},
+  "arup.com":{p:"firstname.lastname",c:"likely",n:"Arup"},
+  // ── UK: TECH / MEDIA ──
+  "sap.com":{p:"firstname.lastname",c:"verified",n:"SAP"},
+  "arm.com":{p:"firstname.lastname",c:"verified",n:"ARM"},
+  "deepmind.com":{p:"firstname.lastname",c:"likely",n:"DeepMind"},
+  "graphcore.ai":{p:"firstname.lastname",c:"likely",n:"Graphcore"},
+  "improbable.io":{p:"firstname.lastname",c:"likely",n:"Improbable"},
+  "bbc.co.uk":{p:"f.lastname",c:"verified",n:"BBC"},
+  "ft.com":{p:"f.lastname",c:"verified",n:"Financial Times"},
+  "theguardian.com":{p:"f.lastname",c:"likely",n:"The Guardian"},
+  "economist.com":{p:"f.lastname",c:"likely",n:"The Economist"},
+  "reuters.com":{p:"f.lastname",c:"verified",n:"Reuters"},
+  // ── UK: ENERGY ──
+  "shell.com":{p:"firstname.lastname",c:"verified",n:"Shell"},
+  "bp.com":{p:"firstname.lastname",c:"verified",n:"BP"},
+  // ── UK: PHARMA / HEALTHCARE ──
+  "astrazeneca.com":{p:"firstname.lastname",c:"verified",n:"AstraZeneca"},
+  "gsk.com":{p:"firstname.lastname",c:"verified",n:"GSK"},
+  // ── UK: INSURANCE ──
+  "aviva.com":{p:"firstname.lastname",c:"verified",n:"Aviva"},
+  "legalandgeneral.com":{p:"f.lastname",c:"verified",n:"Legal & General"},
+  "prudential.co.uk":{p:"f.lastname",c:"verified",n:"Prudential UK"},
+  "admiralgroup.co.uk":{p:"f.lastname",c:"likely",n:"Admiral"},
+  // ── UK: RETAIL / FMCG ──
+  "unilever.com":{p:"firstname.lastname",c:"verified",n:"Unilever"},
+  "tesco.com":{p:"firstname.lastname",c:"verified",n:"Tesco"},
+  "sainsburys.co.uk":{p:"f.lastname",c:"likely",n:"Sainsbury's"},
+  "marksandspencer.com":{p:"f.lastname",c:"likely",n:"M&S"},
+  "next.co.uk":{p:"f.lastname",c:"likely",n:"Next"},
+  "asda.co.uk":{p:"f.lastname",c:"likely",n:"Asda"},
+  "ocado.com":{p:"firstname.lastname",c:"likely",n:"Ocado"},
+  "burberry.com":{p:"firstname.lastname",c:"verified",n:"Burberry"},
+  // ── UK: TELECOM ──
+  "bt.com":{p:"f.lastname",c:"verified",n:"BT Group"},
+  "vodafone.co.uk":{p:"firstname.lastname",c:"verified",n:"Vodafone UK"},
+  "three.co.uk":{p:"f.lastname",c:"likely",n:"Three UK"},
+  // ── UK: AEROSPACE / DEFENSE ──
+  "baesystems.com":{p:"f.lastname",c:"verified",n:"BAE Systems"},
+  "rolls-royce.com":{p:"f.lastname",c:"verified",n:"Rolls-Royce"},
+  "airbus.com":{p:"firstname.lastname",c:"verified",n:"Airbus"},
+  "gchq.gov.uk":{p:"f.lastname",c:"likely",n:"GCHQ"},
+  "mi5.gov.uk":{p:"f.lastname",c:"likely",n:"MI5"},
+  // ── UK: EDUCATION ──
+  "ucl.ac.uk":{p:"f.lastname",c:"verified",n:"UCL"},
+  "lse.ac.uk":{p:"f.lastname",c:"verified",n:"LSE"},
+  "ed.ac.uk":{p:"f.lastname",c:"verified",n:"University of Edinburgh"},
+  // ── UK: TRAVEL / HOSPITALITY ──
+  "virginatlantic.com":{p:"f.lastname",c:"likely",n:"Virgin Atlantic"},
+  "ba.com":{p:"f.lastname",c:"verified",n:"British Airways"},
+  "easyjet.com":{p:"f.lastname",c:"likely",n:"easyJet"},
+  "ryanair.com":{p:"f.lastname",c:"likely",n:"Ryanair"},
+  "ihg.com":{p:"f.lastname",c:"verified",n:"IHG Hotels"},
+  "travelodge.co.uk":{p:"f.lastname",c:"likely",n:"Travelodge"},
+  // ── UK: LOGISTICS ──
+  "dhl.com":{p:"firstname.lastname",c:"verified",n:"DHL"},
+  "dpd.com":{p:"f.lastname",c:"likely",n:"DPD"},
+  "royalmail.com":{p:"f.lastname",c:"verified",n:"Royal Mail"},
+  // ── UK: FINTECH ──
+  "revolut.com":{p:"firstname.lastname",c:"likely",n:"Revolut"},
+  "wise.com":{p:"firstname.lastname",c:"verified",n:"Wise"},
+  "monzo.com":{p:"firstname.lastname",c:"likely",n:"Monzo"},
+  "starlingbank.com":{p:"firstname.lastname",c:"likely",n:"Starling Bank"},
+  "checkout.com":{p:"firstname.lastname",c:"likely",n:"Checkout.com"},
+  "worldpay.com":{p:"f.lastname",c:"verified",n:"Worldpay"},
+  // ── UK: INDUSTRIAL ──
+  "siemens.com":{p:"firstname.lastname",c:"verified",n:"Siemens"},
+  "bosch.com":{p:"firstname.lastname",c:"verified",n:"Bosch"},
+  "schneider-electric.com":{p:"firstname.lastname",c:"verified",n:"Schneider Electric"},
+  "abb.com":{p:"firstname.lastname",c:"verified",n:"ABB"},
+  // ── UK: SPORTS / GAMING ──
+  "nintendo.co.uk":{p:"firstname.lastname",c:"verified",n:"Nintendo UK"},
+  "codemasters.com":{p:"firstname.lastname",c:"likely",n:"Codemasters"},
+  // ── USA: CYBERSECURITY ──
+  "crowdstrike.com":{p:"firstname.lastname",c:"verified",n:"CrowdStrike"},
+  "zscaler.com":{p:"firstname.lastname",c:"verified",n:"Zscaler"},
+  "paloaltonetworks.com":{p:"firstname.lastname",c:"verified",n:"Palo Alto Networks"},
+  "fortinet.com":{p:"firstname.lastname",c:"verified",n:"Fortinet"},
+  "sentinelone.com":{p:"firstname.lastname",c:"likely",n:"SentinelOne"},
+  "cyberark.com":{p:"firstname.lastname",c:"likely",n:"CyberArk"},
+  "rapid7.com":{p:"firstname.lastname",c:"likely",n:"Rapid7"},
+  // ── USA: SEMICONDUCTOR ──
+  "broadcom.com":{p:"firstname.lastname",c:"verified",n:"Broadcom"},
+  "texasinstruments.com":{p:"firstname.lastname",c:"verified",n:"Texas Instruments"},
+  "micron.com":{p:"firstname.lastname",c:"verified",n:"Micron"},
+  "lamresearch.com":{p:"firstname.lastname",c:"verified",n:"Lam Research"},
+  "appliedmaterials.com":{p:"firstname.lastname",c:"verified",n:"Applied Materials"},
+  "kla.com":{p:"f.lastname",c:"likely",n:"KLA"},
+  // ── USA: REAL ESTATE ──
+  "prologis.com":{p:"firstname.lastname",c:"verified",n:"Prologis"},
+  "americantower.com":{p:"f.lastname",c:"verified",n:"American Tower"},
+  "equinix.com":{p:"firstname.lastname",c:"verified",n:"Equinix"},
+  "digitalrealty.com":{p:"firstname.lastname",c:"verified",n:"Digital Realty"},
+  "cbre.com":{p:"f.lastname",c:"verified",n:"CBRE"},
+  "jll.com":{p:"f.lastname",c:"verified",n:"JLL"},
+  // ── UK: ADDITIONAL TECH ──
+  "darktrace.com":{p:"firstname.lastname",c:"likely",n:"Darktrace"},
+  "babylonhealth.com":{p:"firstname.lastname",c:"likely",n:"Babylon Health"},
+  "oaknorth.com":{p:"firstname.lastname",c:"likely",n:"OakNorth"},
+  // ── UK: CONGLOMERATE / HOLDING ──
+  "wpp.com":{p:"firstname.lastname",c:"verified",n:"WPP"},
+  "experian.com":{p:"firstname.lastname",c:"verified",n:"Experian"},
+  "compass-group.com":{p:"firstname.lastname",c:"verified",n:"Compass Group"},
+  "dyson.com":{p:"firstname.lastname",c:"likely",n:"Dyson"},
+  "jaguarlandrover.com":{p:"firstname.lastname",c:"verified",n:"JLR"},
+  "whsmith.co.uk":{p:"f.lastname",c:"likely",n:"WHSmith"},
+  // ── COMPANIES USING l.lastname PATTERN ──
+  "cam.ac.uk":{p:"l.lastname",c:"verified",n:"Cambridge"},
+  "ox.ac.uk":{p:"l.lastname",c:"verified",n:"Oxford"},
+  "imperial.ac.uk":{p:"l.lastname",c:"verified",n:"Imperial College"},
+  // ── COMPANIES USING lastname.f PATTERN ──
+  "lloydsbanking.com":{p:"lastname.f",c:"verified",n:"Lloyds Banking"},
+  "rbs.co.uk":{p:"lastname.f",c:"verified",n:"Royal Bank of Scotland"},
+};
+
+// Helper: find company pattern by domain
+function lookupDomain(domain){
+  const d=domain.toLowerCase().replace(/^www\./,'');
+  // Exact match
+  if(companyDB[d])return{...companyDB[d],domain:d};
+  // Try common subdomain patterns
+  const parts=d.split('.');
+  // Try without subdomain (e.g., mail.google.com → google.com)
+  if(parts.length>2){
+    const parent=parts.slice(-2).join('.');
+    if(companyDB[parent])return{...companyDB[parent],domain:parent};
+  }
+  // Partial match: check if any key ends with the domain
+  for(const key of Object.keys(companyDB)){
+    if(key.endsWith('.'+d)||d.endsWith('.'+key))return{...companyDB[key],domain:key};
+  }
+  return null;
+}
+
+// Auto-detect on domain input
+let detectTimeout=null;
+document.getElementById('ef-domain').addEventListener('input',function(){
+  clearTimeout(detectTimeout);
+  const val=this.value.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/+$/,'');
+  detectTimeout=setTimeout(()=>{
+    const detectEl=document.getElementById('ef-detect');
+    if(!val){detectEl.className='domain-detect';detectEl.innerHTML='';return}
+    const match=lookupDomain(val);
+    if(match){
+      const confLabel=match.c==='verified'?'VERIFIED':match.c==='likely'?'LIKELY':'GUESSED';
+      const confIcon=match.c==='verified'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+      detectEl.className='domain-detect found';
+      detectEl.innerHTML=`
+        <div class="domain-detect-header">${confIcon}<span class="domain-detect-title">Pattern Detected for ${match.n}</span></div>
+        <div class="domain-detect-body">
+          This company uses <strong>${match.p}</strong> email format.
+          <div class="domain-detect-pattern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            ${match.p}@${val}
+            <span class="domain-detect-confidence ${match.c}">${confLabel}</span>
+          </div>
+        </div>`;
+    }else{
+      detectEl.className='domain-detect not-found';
+      detectEl.innerHTML=`
+        <div class="domain-detect-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span class="domain-detect-title">Pattern not in database</span>
+        </div>
+        <div class="domain-detect-body">
+          Showing all patterns ranked by <strong>Hunter.io priority</strong>. The most common corporate format is <strong>firstname.lastname</strong> (used by 48-56% of large companies).
+        </div>`;
+    }
+  },400);
+});
+
+function generateEmails(){
+  const first=document.getElementById('ef-first').value.trim();
+  const last=document.getElementById('ef-last').value.trim();
+  let domain=document.getElementById('ef-domain').value.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/+$/,'');
+  if(!first||!last||!domain){showToast('Missing fields','Please fill in all fields.','info');return}
+  const f=first.toLowerCase(),l=last.toLowerCase(),fi=f[0],li=l[0];
+  // Check if domain has a detected pattern
+  const domainMatch=lookupDomain(domain);
+  detectedPatternIndex=-1;
+  if(domainMatch){
+    detectedPatternIndex=patternLabels.indexOf(domainMatch.p);
+  }
+  // Ordered by Hunter.io priority: most common corporate patterns first
+  emailData=[`${f}.${l}@${domain}`,`${fi}.${l}@${domain}`,`${f}@${domain}`,`${fi}${l}@${domain}`,`${f}${l}@${domain}`,`${f}${li}@${domain}`,`${f}.${li}@${domain}`,`${l}.${f}@${domain}`,`${li}.${f}@${domain}`,`${f}_${l}@${domain}`,`${l}${f}@${domain}`,`${fi}.${li}@${domain}`,`${fi}${li}@${domain}`,`${f}-${l}@${domain}`,`${l}_${f}@${domain}`,`${l}@${domain}`,`${fi}_${l}@${domain}`,`${fi}-${l}@${domain}`,`${l}_${fi}@${domain}`,`${l}-${fi}@${domain}`,`${li}${fi}@${domain}`,`${l}${fi}@${domain}`,`${l}-${f}@${domain}`,`${li}.${fi}@${domain}`,`${l}.${fi}@${domain}`,`${li}.${l}@${domain}`,`${li}${f}@${domain}`,`${fi}_${li}@${domain}`,`${li}_${fi}@${domain}`,`${fi}-${li}@${domain}`,`${li}-${fi}@${domain}`,`${li}_${f}@${domain}`,`${li}-${f}@${domain}`,`${li}_${l}@${domain}`,`${li}-${l}@${domain}`];
+  document.getElementById('ef-stats').style.display='block';
+  const statsExtra=domainMatch?` <span style="color:#059669;font-weight:600">• ${domainMatch.n} uses: ${domainMatch.p}</span>`:'';
+  document.getElementById('ef-stats').innerHTML=`Found <strong>${emailData.length}</strong> email patterns for <strong>${first} ${last}</strong>${statsExtra}`;
+  const container=document.getElementById('ef-results');
+  container.style.display='block';
+  container.innerHTML=emailData.map((email,i)=>{
+    const prio=patternPriority[i];
+    const prioLabel=prio==='high'?'🔥 HIGH':prio==='medium'?'⭐ MID':'💡 LOW';
+    const topClass=prio==='high'?' top-pattern':'';
+    const isDetected=i===detectedPatternIndex;
+    const detectedClass=isDetected?' detected-pattern':'';
+    const detectedBadge=isDetected?' <span style="font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(16,185,129,.15);color:#059669;font-weight:700;letter-spacing:.3px">✅ MATCH</span>':'';
+    return `<div class="email-row${topClass}${detectedClass}" style="animation:panelIn .3s ease ${i*.03}s both">
+      <div class="email-left">
+        <span class="email-priority ${prio}">${prioLabel}</span>
+        <span class="email-pattern">${patternLabels[i]}${detectedBadge}</span>
+        <span class="email-addr">${email}</span>
+      </div>
+      <button class="copy-sm" onclick="copyEmail(${i})" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+  document.getElementById('ef-copyAll').style.display='inline-flex';
+}
+
+async function copyEmail(i){
+  const ok=await copyToClipboard(emailData[i]);
+  if(ok){
+    showToast('Copied!',emailData[i],'check');
+    const rows=document.querySelectorAll('.email-row');
+    if(rows[i])rows[i].classList.add('copied-flash');
+  }else showToast('Copy failed','Please copy manually.','info');
+}
+
+async function copyAllEmails(){
+  if(!emailData.length)return;
+  const ok=await copyToClipboard(emailData.join(', '));
+  ok?showToast('All emails copied!',emailData.length+' patterns copied.','check'):showToast('Copy failed','Please copy manually.','info');
+}
+
+function clearEmailFinder(){
+  document.getElementById('ef-first').value='';
+  document.getElementById('ef-last').value='';
+  document.getElementById('ef-domain').value='';
+  document.getElementById('ef-results').style.display='none';
+  document.getElementById('ef-results').innerHTML='';
+  document.getElementById('ef-stats').style.display='none';
+  document.getElementById('ef-stats').innerHTML='';
+  document.getElementById('ef-detect').className='domain-detect';
+  document.getElementById('ef-detect').innerHTML='';
+  document.getElementById('ef-copyAll').style.display='none';
+  emailData=[];
+  detectedPatternIndex=-1;
+  showToast('Cleared!','All fields and results cleared.','check');
+}
+
+document.addEventListener('keypress',e=>{if(e.key==='Enter'&&(document.activeElement.id||'').startsWith('ef-'))generateEmails()});
+
+/* ===== CASE CONVERTER ===== */
+const ccText=document.getElementById('cc-text');
+ccText.addEventListener('input',updateCCStats);
+
+function updateCCStats(){
+  const t=ccText.value;
+  document.getElementById('cc-chars').textContent=t.length;
+  document.getElementById('cc-words').textContent=t.trim()===''?0:t.trim().split(/\s+/).length;
+  document.getElementById('cc-lines').textContent=t===''?0:t.split('\n').length;
+  document.getElementById('cc-sentences').textContent=t===''?0:(t.match(/[.!?]+/g)||[]).length;
+}
+
+const TITLE_MINOR=new Set(['a','an','the','and','but','or','for','nor','on','at','to','from','by','in','of','as','is','it','up','so']);
+
+function convertCase(mode){
+  if(!ccText.value.trim()){showToast('No text','Enter some text first.','info');return}
+  let t=ccText.value;
+  switch(mode){
+    case 'sentence':t=t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g,c=>c.toUpperCase());break;
+    case 'lower':t=t.toLowerCase();break;
+    case 'upper':t=t.toUpperCase();break;
+    case 'capitalized':t=t.toLowerCase().replace(/\b\w/g,l=>l.toUpperCase());break;
+    case 'title':t=t.toLowerCase().split(/(\s+)/).map((w,i)=>(i===0||!TITLE_MINOR.has(w.toLowerCase()))?w.replace(/^\w/,c=>c.toUpperCase()):w).join('');break;
+    case 'alternating':{let j=0;t=t.split('').map(c=>/[a-zA-Z]/.test(c)?(j++%2===0?c.toLowerCase():c.toUpperCase()):c).join('');break}
+    case 'inverse':t=t.split('').map(c=>c===c.toUpperCase()?c.toLowerCase():c.toUpperCase()).join('');break;
+  }
+  ccText.value=t;updateCCStats();
+  showToast('Converted!',mode.charAt(0).toUpperCase()+mode.slice(1)+' case applied.','check');
+}
+
+async function copyText(){
+  if(!ccText.value)return;
+  const ok=await copyToClipboard(ccText.value);
+  ok?showToast('Copied!','Text copied to clipboard.','check'):showToast('Copy failed','Please copy manually.','info');
+}
+
+function downloadText(){
+  if(!ccText.value)return;
+  const blob=new Blob([ccText.value],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='converted-text.txt';a.click();
+  showToast('Downloaded!','Text file has been downloaded.','check');
+}
+
+function clearText(){ccText.value='';updateCCStats()}
+
+/* ===== NUMBERS TO WORDS ===== */
+let numMode='words';
+
+function setNumMode(btn,mode){
+  numMode=mode;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  convertNumber();
+}
+
+const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+const thousands=['','Thousand','Million','Billion','Trillion'];
+
+function convertHundreds(n){
+  let s='';
+  if(n>=100){s+=ones[Math.floor(n/100)]+' Hundred ';n%=100}
+  if(n>=20){s+=tens[Math.floor(n/10)];if(n%10)s+='-'+ones[n%10]}
+  else if(n>0)s+=ones[n];
+  return s.trim();
+}
+
+function numberToWords(n){
+  if(n===0)return'Zero';let r='',i=0;
+  while(n>0){const c=n%1000;if(c){r=convertHundreds(c)+(thousands[i]?' '+thousands[i]:'')+(r?' '+r:'')}n=Math.floor(n/1000);i++}
+  return r.trim();
+}
+
+function convertNumber(){
+  const raw=document.getElementById('nw-input').value.trim();
+  const box=document.getElementById('nw-result');
+  if(!raw){
+    box.className='result-box empty';box.textContent='Enter a number to see the conversion';return;
+  }
+  const cleaned=raw.replace(/,/g,'');
+  if(isNaN(parseFloat(cleaned))||parseFloat(cleaned)<0){
+    box.className='result-box empty';box.textContent='Enter a valid positive number';return;
+  }
+  const num=parseFloat(cleaned);
+  const parts=cleaned.split('.');
+  const integerPart=parseInt(parts[0],10);
+  let output='';
+
+  if(numMode==='words'){
+    output=numberToWords(integerPart);
+    if(parts.length>1&&parts[1]){const dw=parts[1].split('').map(d=>ones[parseInt(d)]).join(' ');output+=' Point '+dw}
+  }else if(numMode==='currency'){
+    output=numberToWords(integerPart)+' Dollars';
+    if(parts.length>1&&parts[1]){const cents=parts[1].padEnd(2,'0').substring(0,2);const cn=parseInt(cents,10);if(cn>0)output+=' and '+numberToWords(cn)+' Cents'}
+  }else if(numMode==='check'){
+    output=numberToWords(integerPart);
+    let centsStr='00';if(parts.length>1&&parts[1])centsStr=parts[1].padEnd(2,'0').substring(0,2);
+    output+=' and '+centsStr+'/100 Dollars';
+  }
+
+  const caseType=document.getElementById('nw-case').value;
+  if(caseType==='upper')output=output.toUpperCase();
+  else if(caseType==='lower')output=output.toLowerCase();
+  else if(caseType==='sentence')output=output.charAt(0).toUpperCase()+output.slice(1).toLowerCase();
+
+  box.className='result-box';
+  box.innerHTML=`<div>${output}</div><div class="result-footer"><span class="result-badge">${numMode==='words'?'Words':numMode==='currency'?'Currency':'Check Writing'}</span><button class="result-copy" onclick="copyNumResult()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>`;
+}
+
+async function copyNumResult(){
+  const box=document.getElementById('nw-result');
+  const text=box.querySelector('div').textContent;
+  const ok=await copyToClipboard(text);
+  ok?showToast('Copied!','Number in words copied.','check'):showToast('Copy failed','Please copy manually.','info');
+}
+
+document.getElementById('nw-input').addEventListener('input',convertNumber);
+document.getElementById('nw-case').addEventListener('change',convertNumber);
+
+updateCCStats();
+
+/* ===== SUBTLE CURSOR GLOW ===== */
+document.addEventListener('mousemove',e=>{
+  const orbs=document.querySelectorAll('.orb-3');
+  orbs.forEach(o=>{
+    const x=e.clientX/window.innerWidth*100;
+    const y=e.clientY/window.innerHeight*100;
+    o.style.left=x+'%';o.style.top=y+'%';
+  });
+});
+</script>
+
+
+<script>
+
+/* ===== OCR (Image to Text) — English only ===== */
+let ocrCurrentImage=null;
+let ocrOutputMode='standard';
+let ocrPreprocess='auto';
+let ocrIsRunning=false;
+// Lens mode state
+let ocrWords=[];              // [{text, bbox:{x0,y0,x1,y1}, confidence}, ...]
+let ocrImageW=0, ocrImageH=0; // original image dimensions (from Tesseract)
+let ocrBoxesVisible=true;     // toggle for word boxes
+
+(function ocrInit(){
+  document.querySelectorAll('[data-ocr-mode]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('[data-ocr-mode]').forEach(c=>c.classList.remove('active'));
+      ocrOutputMode=chip.dataset.ocrMode;
+      chip.classList.add('active');
+    });
+  });
+  document.querySelectorAll('[data-ocr-preprocess]').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('[data-ocr-preprocess]').forEach(c=>c.classList.remove('active'));
+      ocrPreprocess=chip.dataset.ocrPreprocess;
+      chip.classList.add('active');
+    });
+  });
+
+  const fileInput=document.getElementById('ocrFileInput');
+  const dropzone=document.getElementById('ocrDropzone');
+
+  fileInput.addEventListener('change',e=>{
+    if(e.target.files[0]) ocrHandleFile(e.target.files[0]);
+  });
+  ['dragenter','dragover'].forEach(ev=>{
+    dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('dragover')});
+  });
+  ['dragleave','drop'].forEach(ev=>{
+    dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('dragover')});
+  });
+  dropzone.addEventListener('drop',e=>{
+    const f=e.dataTransfer.files[0];
+    if(f) ocrHandleFile(f);
+  });
+
+  window.addEventListener('paste',e=>{
+    if(!document.getElementById('panel-ocr').classList.contains('active')) return;
+    const items=(e.clipboardData&&e.clipboardData.items)||[];
+    for(let i=0;i<items.length;i++){
+      if(items[i].type.indexOf('image/')===0){
+        const f=items[i].getAsFile();
+        if(f) ocrHandleFile(f);
+        break;
+      }
+    }
+  });
+
+  document.getElementById('ocrResult').addEventListener('input',e=>ocrUpdateStats(e.target.value));
+})();
+
+function ocrHandleFile(file){
+  if(!file.type||file.type.indexOf('image/')!==0){
+    showToast('Invalid file','Please select an image file (PNG, JPG, JPEG, JFIF, WebP, BMP, GIF).','error');
+    return;
+  }
+  if(file.size>10*1024*1024){
+    showToast('File too large','Please upload an image under 10 MB.','error');
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    ocrCurrentImage={dataUrl:ev.target.result,file:file};
+    const wrap=document.getElementById('ocrPreviewWrap');
+    const img=document.getElementById('ocrPreviewImg');
+    img.src=ev.target.result;
+    document.getElementById('ocrPreviewName').textContent=file.name||'pasted-image.png';
+    document.getElementById('ocrPreviewSize').textContent=ocrFormatBytes(file.size);
+    img.onload=()=>{
+      document.getElementById('ocrPreviewDim').textContent=img.naturalWidth+'\u00d7'+img.naturalHeight+' px';
+    };
+    wrap.classList.add('show');
+    document.getElementById('ocrExtractBtn').disabled=false;
+    showToast('Image loaded','Ready to extract text. Click "Extract Text".','check');
+  };
+  reader.readAsDataURL(file);
+}
+
+// Paste image from clipboard (triggered by the visible Paste button).
+// Uses the async Clipboard API. Falls back to a graceful toast if the
+// browser doesn't support clipboard image reads or the clipboard has no image.
+async function ocrPasteFromClipboard(){
+  // Feature detection
+  if(!navigator.clipboard || !navigator.clipboard.read){
+    showToast('Not supported','Your browser does not support clipboard image reads. Please use Ctrl+V instead, or upload the image.','error');
+    return;
+  }
+  showToast('Reading clipboard','Looking for an image in your clipboard\u2026','info');
+  try{
+    const items=await navigator.clipboard.read();
+    for(const item of items){
+      // Find the first image type the clipboard item supports
+      const imageType=item.types.find(t=>t.indexOf('image/')===0);
+      if(imageType){
+        const blob=await item.getType(imageType);
+        // Build a friendly filename with extension based on MIME
+        const ext=imageType.split('/')[1] || 'png';
+        const filename='pasted-image-'+Date.now()+'.'+ext;
+        const file=new File([blob],filename,{type:imageType});
+        ocrHandleFile(file);
+        return;
+      }
+    }
+    showToast('No image found','Your clipboard does not contain an image. Copy an image first (screenshot or right-click > Copy image).','error');
+  }catch(err){
+    console.warn('Clipboard read failed:',err);
+    // Most common cause: user denied permission or page not focused
+    const msg=err && err.name==='NotAllowedError'
+      ? 'Permission denied. Please click the page first, then try again, or use Ctrl+V.'
+      : 'Could not read clipboard. Try Ctrl+V instead, or upload the image.';
+    showToast('Paste failed',msg,'error');
+  }
+}
+
+function ocrFormatBytes(b){
+  if(b<1024) return b+' B';
+  if(b<1024*1024) return (b/1024).toFixed(1)+' KB';
+  return (b/1024/1024).toFixed(2)+' MB';
+}
+
+function ocrClearImage(){
+  ocrCurrentImage=null;
+  document.getElementById('ocrPreviewWrap').classList.remove('show');
+  document.getElementById('ocrFileInput').value='';
+  document.getElementById('ocrExtractBtn').disabled=true;
+}
+
+function ocrClearAll(){
+  ocrClearImage();
+  document.getElementById('ocrResult').value='';
+  document.getElementById('ocrProgressWrap').classList.remove('show');
+  document.getElementById('ocrCopyBtn').disabled=true;
+  document.getElementById('ocrDownloadBtn').disabled=true;
+  document.getElementById('ocrChars').textContent='0';
+  document.getElementById('ocrWords').textContent='0';
+  document.getElementById('ocrLines').textContent='0';
+  document.getElementById('ocrConfidence').style.display='none';
+  document.getElementById('ocrTime').style.display='none';
+  // Clear Lens overlay
+  ocrWords=[];
+  ocrImageW=0; ocrImageH=0;
+  const overlay=document.getElementById('ocrLensOverlay');
+  if(overlay) overlay.innerHTML='';
+  const toolbar=document.getElementById('ocrLensToolbar');
+  if(toolbar) toolbar.style.display='none';
+  ocrBoxesVisible=true;
+  const toggleBtn=document.getElementById('ocrToggleBoxesBtn');
+  if(toggleBtn) toggleBtn.textContent='Hide Boxes';
+}
+
+function ocrPreprocessImage(dataUrl,mode){
+  return new Promise((resolve)=>{
+    if(mode==='none'){resolve(dataUrl);return}
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      canvas.width=img.naturalWidth;
+      canvas.height=img.naturalHeight;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0);
+      if(mode==='grayscale'||mode==='auto'||mode==='contrast'){
+        const imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const d=imgData.data;
+        for(let i=0;i<d.length;i+=4){
+          const g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+          d[i]=d[i+1]=d[i+2]=g;
+        }
+        if(mode==='contrast'){
+          let min=255,max=0;
+          for(let i=0;i<d.length;i+=4){
+            if(d[i]<min)min=d[i];
+            if(d[i]>max)max=d[i];
+          }
+          const range=max-min||1;
+          for(let i=0;i<d.length;i+=4){
+            d[i]=d[i+1]=d[i+2]=((d[i]-min)/range)*255;
+          }
+        }
+        ctx.putImageData(imgData,0,0);
+      }
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.src=dataUrl;
+  });
+}
+
+async function ocrRun(){
+  if(!ocrCurrentImage||ocrIsRunning) return;
+  ocrIsRunning=true;
+  const btn=document.getElementById('ocrExtractBtn');
+  btn.disabled=true;
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:orbFloat 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Extracting\u2026';
+  document.getElementById('ocrProgressWrap').classList.add('show');
+  document.getElementById('ocrProgressFill').style.width='0%';
+  document.getElementById('ocrProgressPct').textContent='0%';
+  document.getElementById('ocrProgressStatus').textContent='Preprocessing image\u2026';
+
+  const start=performance.now();
+  try{
+    const processed=await ocrPreprocessImage(ocrCurrentImage.dataUrl,ocrPreprocess);
+    const langStr='eng';
+    document.getElementById('ocrProgressStatus').textContent='Loading OCR engine & language data\u2026';
+
+    const result=await Tesseract.recognize(
+      processed,langStr,
+      {
+        logger:m=>{
+          if(m.status==='recognizing text'){
+            const pct=Math.round(m.progress*100);
+            document.getElementById('ocrProgressFill').style.width=pct+'%';
+            document.getElementById('ocrProgressPct').textContent=pct+'%';
+            document.getElementById('ocrProgressStatus').textContent='Recognizing text\u2026';
+          }else if(m.status){
+            document.getElementById('ocrProgressStatus').textContent=ocrCapitalize(m.status)+'\u2026';
+            if(typeof m.progress==='number'){
+              const pct=Math.round(m.progress*100);
+              document.getElementById('ocrProgressFill').style.width=pct+'%';
+              document.getElementById('ocrProgressPct').textContent=pct+'%';
+            }
+          }
+        }
+      }
+    );
+
+    const elapsed=((performance.now()-start)/1000).toFixed(2);
+    let text=result.data.text||'';
+    const confidence=result.data.confidence?Math.round(result.data.confidence):null;
+
+    if(ocrOutputMode==='standard'){
+      text=text.split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/\n{3,}/g,'\n\n').trim();
+    }else if(ocrOutputMode==='layout'){
+      text=text.replace(/\n{3,}/g,'\n\n').trim();
+    }
+
+    const ta=document.getElementById('ocrResult');
+    ta.value=text;
+    ta.readOnly=false;
+    ocrUpdateStats(text);
+    if(confidence!==null){
+      document.getElementById('ocrConfidence').innerHTML='Confidence: <strong>'+confidence+'%</strong>';
+      document.getElementById('ocrConfidence').style.display='inline';
+    }
+    document.getElementById('ocrTime').innerHTML='Time: <strong>'+elapsed+'s</strong>';
+    document.getElementById('ocrTime').style.display='inline';
+    document.getElementById('ocrCopyBtn').disabled=false;
+    document.getElementById('ocrDownloadBtn').disabled=false;
+    document.getElementById('ocrProgressStatus').textContent='Done \u2713';
+    showToast('Extraction complete',confidence!==null?'Extracted '+text.length+' characters with '+confidence+'% confidence.':'Extraction complete.','check');
+
+    // === Lens Mode: render word boxes overlay ===
+    try{
+      const words=result.data.words||[];
+      if(words.length>0){
+        ocrRenderLensBoxes(words, result.data.imageWidth, result.data.imageHeight);
+        document.getElementById('ocrLensToolbar').style.display='flex';
+      }
+    }catch(lensErr){console.warn('Lens overlay failed:',lensErr)}
+  }catch(err){
+    console.error(err);
+    showToast('OCR failed',err.message||'Could not extract text from this image.','error');
+    document.getElementById('ocrProgressStatus').textContent='Failed \u2717';
+  }finally{
+    ocrIsRunning=false;
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 16l4-4 4 4 5-5"></path></svg> Extract Text';
+  }
+}
+
+function ocrCapitalize(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s}
+
+function ocrUpdateStats(text){
+  document.getElementById('ocrChars').textContent=text.length;
+  document.getElementById('ocrWords').textContent=text.trim()?text.trim().split(/\s+/).length:0;
+  document.getElementById('ocrLines').textContent=text?text.split('\n').length:0;
+}
+
+async function ocrCopy(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to copy','Extract some text first.','error');return}
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('Copied','Text copied to clipboard.','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+function ocrDownload(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to download','Extract some text first.','error');return}
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='extracted-text-'+Date.now()+'.txt';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Downloaded','Text file saved to your device.','check');
+}
+
+/* ===== Lens Mode helpers ===== */
+
+// Render bounding boxes for each detected word over the image.
+// Words are positioned using percentages so the overlay stays correct
+// when the preview is resized (responsive).
+function ocrRenderLensBoxes(words, imgW, imgH){
+  ocrWords=words.filter(w=>w&&w.text&&w.text.trim()&&w.bbox);
+  ocrImageW=imgW||0;
+  ocrImageH=imgH||0;
+  const overlay=document.getElementById('ocrLensOverlay');
+  overlay.innerHTML='';
+
+  // If Tesseract didn't report image dimensions, fall back to the <img> natural size.
+  if(!ocrImageW||!ocrImageH){
+    const img=document.getElementById('ocrPreviewImg');
+    ocrImageW=img.naturalWidth||1;
+    ocrImageH=img.naturalHeight||1;
+  }
+
+  ocrWords.forEach((w,i)=>{
+    const b=w.bbox;
+    const leftPct=(b.x0/ocrImageW)*100;
+    const topPct=(b.y0/ocrImageH)*100;
+    const wPct=((b.x1-b.x0)/ocrImageW)*100;
+    const hPct=((b.y1-b.y0)/ocrImageH)*100;
+    if(wPct<=0||hPct<=0) return;
+
+    const box=document.createElement('div');
+    box.className='lens-word';
+    box.style.left=leftPct+'%';
+    box.style.top=topPct+'%';
+    box.style.width=wPct+'%';
+    box.style.height=hPct+'%';
+    box.dataset.idx=i;
+    box.title='Click to copy: '+w.text;
+    box.addEventListener('click',function(e){
+      e.stopPropagation();
+      ocrCopyWord(i);
+    });
+    overlay.appendChild(box);
+  });
+
+  ocrBoxesVisible=true;
+  const toggleBtn=document.getElementById('ocrToggleBoxesBtn');
+  if(toggleBtn) toggleBtn.textContent='Hide Boxes';
+}
+
+// Copy a single word by index
+async function ocrCopyWord(idx){
+  const w=ocrWords[idx];
+  if(!w) return;
+  const ok=await copyToClipboard(w.text);
+  const boxes=document.querySelectorAll('#ocrLensOverlay .lens-word');
+  const box=boxes[idx];
+  if(box){
+    box.classList.remove('copied');
+    void box.offsetWidth; // restart animation
+    box.classList.add('copied');
+  }
+  if(ok) showToast('Copied', '"'+w.text+'" copied to clipboard','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+// Select-all: highlight every box + copy full text
+async function ocrSelectAllWords(){
+  if(ocrWords.length===0){showToast('No words','Extract text first.','error');return}
+  const boxes=document.querySelectorAll('#ocrLensOverlay .lens-word');
+  boxes.forEach(b=>b.classList.add('selected'));
+  setTimeout(()=>boxes.forEach(b=>b.classList.remove('selected')),1500);
+  const text=ocrWords.map(w=>w.text).join(' ');
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('All words copied', ocrWords.length+' words copied to clipboard','check');
+}
+
+// Copy-all: copy full text (same as ocrCopy but triggered from Lens toolbar)
+async function ocrCopyAllWords(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to copy','Extract some text first.','error');return}
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('Copied','Full text copied to clipboard.','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+// Toggle visibility of word boxes (keeps data so user can re-show)
+function ocrToggleBoxes(){
+  const overlay=document.getElementById('ocrLensOverlay');
+  const btn=document.getElementById('ocrToggleBoxesBtn');
+  ocrBoxesVisible=!ocrBoxesVisible;
+  overlay.style.display=ocrBoxesVisible?'block':'none';
+  btn.textContent=ocrBoxesVisible?'Hide Boxes':'Show Boxes';
+}
+</script>
+</body></html>
