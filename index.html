@@ -3,6 +3,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexitool Pro — Email Finder, Case Converter &amp; More</title>
 <meta name="description" content="Professional online tools: Email Pattern Finder, Text Case Converter, and Numbers to Words Converter. Free, fast, and privacy-first.">
+<!-- coi-serviceworker MUST load FIRST — enables cross-origin isolation so qpdf-wasm can use SharedArrayBuffer for text-preserving PDF unlock -->
+<script src="coi-serviceworker.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
@@ -505,6 +507,124 @@ select{cursor:pointer;appearance:auto}
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:10px;font-weight:600;color:var(--text);
 }
+
+/* ===== PDF UNLOCKER ===== */
+#panel-pdf .pdf-options{margin-bottom:14px}
+#panel-pdf .option-card{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface-solid);transition:var(--transition)}
+#panel-pdf .pdf-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media(max-width:768px){#panel-pdf .pdf-mode-grid{grid-template-columns:1fr}}
+#panel-pdf .pdf-mode-chip{
+  display:flex;flex-direction:column;align-items:flex-start;gap:6px;
+  padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;
+  background:transparent;color:var(--text);font-family:inherit;
+  cursor:pointer;transition:var(--transition);text-align:left;
+}
+#panel-pdf .pdf-mode-chip:hover{border-color:var(--violet);background:var(--violet-light)}
+#panel-pdf .pdf-mode-chip.active{
+  border-color:var(--violet);background:var(--violet-light);
+  color:var(--violet-text);box-shadow:0 2px 12px var(--violet-glow);
+}
+#panel-pdf .pdf-mode-chip-title{
+  font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:7px;
+}
+#panel-pdf .pdf-mode-chip-title svg{width:16px;height:16px;flex-shrink:0}
+#panel-pdf .pdf-mode-chip-desc{
+  font-size:11px;color:var(--muted);line-height:1.5;
+}
+#panel-pdf .pdf-mode-chip.active .pdf-mode-chip-desc{color:var(--violet-text);opacity:.85}
+#panel-pdf .pdf-mode-status{
+  margin-top:10px;padding:8px 12px;border-radius:8px;
+  font-size:11px;line-height:1.5;
+  background:var(--violet-light);color:var(--violet-text);
+  border:1px solid rgba(139,92,246,.2);
+}
+#panel-pdf .pdf-mode-status.ready{background:var(--primary-light);color:var(--primary-text);border-color:rgba(16,185,129,.2)}
+#panel-pdf .pdf-mode-status.warning{background:var(--amber-light);color:var(--amber-text);border-color:rgba(245,158,11,.2)}
+#panel-pdf .pdf-mode-status.error{background:rgba(239,68,68,.08);color:var(--red);border-color:rgba(239,68,68,.2)}
+
+#panel-pdf .dropzone{border:2px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--surface-solid);position:relative}
+#panel-pdf .dropzone:hover{border-color:var(--violet);background:var(--violet-light)}
+#panel-pdf .dropzone.dragover{border-color:var(--violet);background:var(--violet-light);transform:scale(1.01)}
+#panel-pdf .dropzone-icon{width:56px;height:56px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--violet-light);color:var(--violet-text);transition:var(--transition)}
+#panel-pdf .dropzone:hover .dropzone-icon{transform:translateY(-3px) scale(1.05)}
+#panel-pdf .dropzone-icon svg{width:26px;height:26px}
+#panel-pdf .dropzone-title{font-size:15px;font-weight:700;margin-bottom:4px}
+#panel-pdf .dropzone-desc{font-size:12px;color:var(--muted);line-height:1.5}
+#panel-pdf .dropzone-desc strong{color:var(--violet-text)}
+#panel-pdf .dropzone input{display:none}
+
+#panel-pdf .pdf-prompt{
+  margin-top:14px;padding:16px;
+  border:1.5px solid var(--amber);border-radius:14px;
+  background:var(--amber-light);
+  display:flex;gap:14px;align-items:flex-start;
+  animation:panelIn .35s ease;
+}
+#panel-pdf .pdf-prompt-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(245,158,11,.2);color:var(--amber-text);flex-shrink:0}
+#panel-pdf .pdf-prompt-icon svg{width:20px;height:20px}
+#panel-pdf .pdf-prompt-body{flex:1;min-width:0}
+#panel-pdf .pdf-prompt-title{font-size:14px;font-weight:700;color:var(--amber-text)}
+#panel-pdf .pdf-prompt-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+#panel-pdf .pdf-prompt-input-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+#panel-pdf .pdf-prompt-input-row input{
+  flex:1;min-width:160px;
+  padding:9px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface-solid);
+  color:var(--text);font-family:inherit;font-size:13px;
+}
+#panel-pdf .pdf-prompt-input-row input:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow)}
+
+#panel-pdf .progress-wrap{margin-top:14px;display:none;animation:panelIn .35s ease}
+#panel-pdf .progress-wrap.show{display:block}
+#panel-pdf .progress-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:6px}
+#panel-pdf .progress-label strong{color:var(--violet-text);font-weight:700}
+#panel-pdf .progress-bar{height:8px;border-radius:6px;background:var(--border);overflow:hidden;position:relative}
+#panel-pdf .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#8b5cf6,#06b6d4,#10b981);background-size:200% 100%;border-radius:6px;transition:width .25s ease;animation:pdfProgressShine 2s linear infinite}
+@keyframes pdfProgressShine{0%{background-position:0% 0}100%{background-position:200% 0}}
+
+#panel-pdf .pdf-list{margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:380px;overflow-y:auto}
+#panel-pdf .pdf-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border:1px solid var(--border);border-radius:12px;
+  background:var(--surface-solid);
+  transition:var(--transition);
+}
+#panel-pdf .pdf-item:hover{border-color:var(--border-hover);transform:translateX(2px)}
+#panel-pdf .pdf-item-icon{
+  width:36px;height:36px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;background:var(--violet-light);color:var(--violet-text);
+}
+#panel-pdf .pdf-item-icon svg{width:18px;height:18px}
+#panel-pdf .pdf-item-icon.success{background:var(--primary-light);color:var(--primary-text)}
+#panel-pdf .pdf-item-icon.error{background:rgba(239,68,68,.12);color:var(--red)}
+#panel-pdf .pdf-item-info{flex:1;min-width:0}
+#panel-pdf .pdf-item-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#panel-pdf .pdf-item-meta{font-size:11px;color:var(--muted);margin-top:2px}
+#panel-pdf .pdf-item-meta strong{color:var(--text)}
+#panel-pdf .pdf-item-actions{display:flex;gap:6px;flex-shrink:0}
+#panel-pdf .pdf-item-btn{
+  padding:6px 10px;border:1px solid var(--border);border-radius:8px;
+  background:transparent;color:var(--text);font-family:inherit;font-size:11px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+  display:inline-flex;align-items:center;gap:5px;
+}
+#panel-pdf .pdf-item-btn svg{width:13px;height:13px}
+#panel-pdf .pdf-item-btn:hover:not(:disabled){background:var(--violet-light);border-color:var(--violet);color:var(--violet-text)}
+#panel-pdf .pdf-item-btn:disabled{opacity:.4;cursor:not-allowed}
+#panel-pdf .pdf-item-btn.remove:hover:not(:disabled){background:rgba(239,68,68,.08);border-color:var(--red);color:var(--red)}
+
+#panel-pdf .pdf-note{
+  margin-top:14px;padding:14px 16px;
+  border-radius:12px;
+  background:var(--violet-light);border:1px solid rgba(139,92,246,.2);
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:12px;color:var(--muted);line-height:1.6;
+}
+#panel-pdf .pdf-note svg{width:18px;height:18px;color:var(--violet-text);flex-shrink:0;margin-top:1px}
+#panel-pdf .pdf-note strong{color:var(--text)}
+
 #panel-ocr .preview-wrap{margin-top:16px;position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-solid);display:none}
 #panel-ocr .preview-wrap.show{display:block;animation:panelIn .35s ease}
 #panel-ocr .preview-stage{display:flex;justify-content:center;align-items:center;padding:8px;background:repeating-conic-gradient(#e2e8f0 0% 25%,#fff 0% 50%) 50%/16px 16px;min-height:80px}
@@ -616,6 +736,10 @@ body.dark #panel-ocr .preview-stage{background:repeating-conic-gradient(#1e2d4a 
     <button class="tab-btn" onclick="switchTab('ocr')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 8h2M7 12h2M7 16h2M13 8h4M13 12h4M13 16h4"></path></svg>
       Image to Text
+    </button>
+    <button class="tab-btn" onclick="switchTab('pdf')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><rect x="9" y="13" width="6" height="5" rx="1"></rect></svg>
+      PDF Unlocker
     </button>
   </div>
 
@@ -881,6 +1005,107 @@ body.dark #panel-ocr .preview-stage{background:repeating-conic-gradient(#1e2d4a 
       </div>
     </div>
   </div>
+
+  <!-- PDF UNLOCKER -->
+  <div class="tab-panel" id="panel-pdf">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon violet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><rect x="9" y="13" width="6" height="5" rx="1"></rect></svg>
+        </div>
+        <div>
+          <div class="card-title">PDF Unlocker</div>
+          <div class="card-desc">Remove copy/print/edit restrictions from PDFs &mdash; no password needed for owner-locked files</div>
+        </div>
+      </div>
+
+      <!-- UNLOCK MODE OPTIONS -->
+      <div class="pdf-options">
+        <div class="option-card" id="pdfModeCard">
+          <label class="field-label">Unlock Mode</label>
+          <div class="pdf-mode-grid">
+            <button class="pdf-mode-chip active" data-pdf-mode="preserve" type="button">
+              <div class="pdf-mode-chip-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 13h6M9 17h6"/></svg>
+                Preserve Text (Recommended)
+              </div>
+              <div class="pdf-mode-chip-desc">Keeps original text searchable &amp; selectable. Uses qpdf (WASM, runs in browser, requires page reload on first use).</div>
+            </button>
+            <button class="pdf-mode-chip" data-pdf-mode="image" type="button">
+              <div class="pdf-mode-chip-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Image-based (Fallback)
+              </div>
+              <div class="pdf-mode-chip-desc">Re-renders each page as image. Works without reload, but text becomes non-searchable.</div>
+            </button>
+          </div>
+          <div class="pdf-mode-status" id="pdfModeStatus">Checking qpdf availability&hellip;</div>
+        </div>
+      </div>
+
+      <!-- DROPZONE -->
+      <div class="dropzone" id="pdfDropzone" onclick="document.getElementById('pdfFileInput').click()">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><rect x="9" y="13" width="6" height="5" rx="1"></rect></svg>
+        </div>
+        <div class="dropzone-title">Drop PDF here or click to upload</div>
+        <div class="dropzone-desc">Supports <strong>PDF files</strong> &middot; Max 20 MB &middot; Batch upload allowed &middot; Processed locally in your browser</div>
+        <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" multiple>
+      </div>
+
+      <!-- PASSWORD PROMPT (only shown for user-password-protected PDFs) -->
+      <div class="pdf-prompt" id="pdfPasswordPrompt" style="display:none">
+        <div class="pdf-prompt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <div class="pdf-prompt-body">
+          <div class="pdf-prompt-title" id="pdfPromptTitle">Password required</div>
+          <div class="pdf-prompt-desc" id="pdfPromptDesc">This PDF is protected with a user password. Enter it below to unlock.</div>
+          <div class="pdf-prompt-input-row">
+            <input type="password" id="pdfPasswordInput" placeholder="Enter PDF password" onkeydown="if(event.key==='Enter')pdfRetryWithPassword()">
+            <button class="btn btn-primary" onclick="pdfRetryWithPassword()">Unlock</button>
+            <button class="btn btn-ghost" onclick="pdfCancelPassword()">Skip</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap" id="pdfProgressWrap">
+        <div class="progress-label">
+          <span id="pdfProgressStatus">Loading PDF engine&hellip;</span>
+          <strong id="pdfProgressPct">0%</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="pdfProgressFill"></div></div>
+      </div>
+
+      <!-- ACTION ROW -->
+      <div class="action-row">
+        <button class="btn btn-primary" id="pdfUnlockBtn" onclick="pdfUnlockAll()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+          Unlock All
+        </button>
+        <button class="btn btn-outline" id="pdfDownloadAllBtn" onclick="pdfDownloadAll()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download All
+        </button>
+        <button class="btn btn-danger" onclick="pdfClearAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+
+      <!-- FILE LIST -->
+      <div class="pdf-list" id="pdfList"></div>
+
+      <!-- INFO NOTE -->
+      <div class="pdf-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <div>
+          <strong>How it works:</strong> Drop your PDF (one that opens but won&rsquo;t let you copy/print). The tool removes the owner-password restrictions in your browser &mdash; no upload, no server, 100% private. If your PDF requires a password to open, you&rsquo;ll be prompted to enter it. Unlocked PDFs are visually identical but text becomes image-based (PDF is re-rendered).
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -915,7 +1140,7 @@ function toggleTheme(){
 
 /* ===== TABS ===== */
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers','ocr'][i]===tab));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['email','case','numbers','ocr','pdf'][i]===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
 }
@@ -2017,5 +2242,511 @@ function ocrToggleBoxes(){
   overlay.style.display=ocrBoxesVisible?'block':'none';
   btn.textContent=ocrBoxesVisible?'Hide Boxes':'Show Boxes';
 }
+</script>
+
+<!-- ===== PDF UNLOCKER script ===== -->
+<script type="module">
+import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
+
+// Load pdf-lib (UMD bundle) — used by image-based fallback mode
+await new Promise((resolve,reject)=>{
+  if(window.PDFLib){resolve();return}
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+  s.onload=resolve;s.onerror=reject;
+  document.head.appendChild(s);
+});
+const { PDFDocument } = window.PDFLib;
+
+// === PDF Unlocker State ===
+let pdfFiles=[];           // [{id, file, status: 'pending'|'processing'|'done'|'error'|'needs-password', unlockedBytes?, error?, needsPassword?, password?}]
+let pdfCurrentId=null;     // file ID waiting for password (if any)
+let pdfIsProcessing=false;
+let pdfMode='preserve';    // 'preserve' (qpdf) | 'image' (pdf.js + pdf-lib)
+let qpdfModule=null;       // lazily loaded qpdf-wasm module
+let qpdfLoadFailed=false;  // set true if qpdf fails to load (e.g., no cross-origin isolation)
+
+// === Check qpdf availability on page load ===
+function pdfUpdateModeStatus(){
+  const el=document.getElementById('pdfModeStatus');
+  if(!el) return;
+  if(pdfMode==='image'){
+    el.className='pdf-mode-status ready';
+    el.innerHTML='<strong>Image-based mode:</strong> Always works. Text becomes non-searchable after unlock. Switch to "Preserve Text" for searchable output.';
+    return;
+  }
+  // preserve mode
+  if(qpdfLoadFailed){
+    el.className='pdf-mode-status warning';
+    el.innerHTML='<strong>qpdf not available.</strong> This usually means cross-origin isolation isn\u2019t active. <button type="button" onclick="location.reload()" style="background:transparent;border:1px solid currentColor;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:600;cursor:pointer;margin-left:6px">Reload page</button> to activate the service worker, or switch to Image-based mode.';
+    return;
+  }
+  if(qpdfModule){
+    el.className='pdf-mode-status ready';
+    el.innerHTML='<strong>qpdf ready.</strong> Text will be preserved \u2014 unlocked PDF remains fully searchable &amp; selectable.';
+    return;
+  }
+  // Not loaded yet
+  if(window.crossOriginIsolated){
+    el.className='pdf-mode-status';
+    el.innerHTML='<strong>Loading qpdf engine\u2026</strong> Will be ready in a moment. First unlock may take a few seconds to load.';
+  }else{
+    el.className='pdf-mode-status warning';
+    el.innerHTML='<strong>Cross-origin isolation not active yet.</strong> Service worker is registering \u2014 <button type="button" onclick="location.reload()" style="background:transparent;border:1px solid currentColor;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:600;cursor:pointer;margin-left:6px">reload the page</button> to activate, or use Image-based mode.';
+  }
+}
+
+// === Mode chip handlers ===
+document.querySelectorAll('[data-pdf-mode]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('[data-pdf-mode]').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    pdfMode=chip.dataset.pdfMode;
+    pdfUpdateModeStatus();
+  });
+});
+
+// === Lazily load qpdf-wasm ===
+async function pdfLoadQpdf(){
+  if(qpdfModule) return qpdfModule;
+  if(qpdfLoadFailed) return null;
+  try{
+    if(!window.crossOriginIsolated){
+      throw new Error('Cross-origin isolation not active. Reload the page to activate the service worker.');
+    }
+    const mod=await import('./qpdf.js');
+    qpdfModule=await mod.default({
+      locateFile:(path)=>'./'+path,
+      print:(text)=>console.log('[qpdf]',text),
+      printErr:(text)=>console.warn('[qpdf]',text),
+      noInitialRun:true,
+    });
+    pdfUpdateModeStatus();
+    return qpdfModule;
+  }catch(err){
+    console.warn('qpdf load failed:',err);
+    qpdfLoadFailed=true;
+    pdfUpdateModeStatus();
+    return null;
+  }
+}
+
+// Initial status check (after a small delay to let service worker settle)
+setTimeout(pdfUpdateModeStatus, 800);
+
+
+// === File input + dropzone ===
+const pdfFileInput=document.getElementById('pdfFileInput');
+const pdfDropzone=document.getElementById('pdfDropzone');
+
+pdfFileInput.addEventListener('change',e=>{
+  if(e.target.files.length>0) pdfAddFiles(Array.from(e.target.files));
+});
+
+['dragenter','dragover'].forEach(ev=>{
+  pdfDropzone.addEventListener(ev,e=>{e.preventDefault();pdfDropzone.classList.add('dragover')});
+});
+['dragleave','drop'].forEach(ev=>{
+  pdfDropzone.addEventListener(ev,e=>{e.preventDefault();pdfDropzone.classList.remove('dragover')});
+});
+pdfDropzone.addEventListener('drop',e=>{
+  const files=Array.from(e.dataTransfer.files).filter(f=>f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf'));
+  if(files.length>0) pdfAddFiles(files);
+});
+
+function pdfAddFiles(files){
+  let added=0;
+  for(const file of files){
+    if(file.size>20*1024*1024){
+      showToast('File too large',file.name+' is over 20 MB. Please use a smaller file.','error');
+      continue;
+    }
+    pdfFiles.push({
+      id: 'pdf-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+      file: file,
+      status: 'pending',
+      unlockedBytes: null,
+      error: null,
+      needsPassword: false,
+      password: null,
+    });
+    added++;
+  }
+  if(added>0){
+    pdfRenderList();
+    document.getElementById('pdfUnlockBtn').disabled=false;
+    showToast(added+' file(s) added','Ready to unlock. Click "Unlock All".','check');
+  }
+}
+
+function pdfFormatBytes(b){
+  if(b<1024) return b+' B';
+  if(b<1024*1024) return (b/1024).toFixed(1)+' KB';
+  return (b/1024/1024).toFixed(2)+' MB';
+}
+
+function pdfRenderList(){
+  const list=document.getElementById('pdfList');
+  list.innerHTML='';
+  pdfFiles.forEach(item=>{
+    const div=document.createElement('div');
+    div.className='pdf-item';
+
+    // Icon based on status
+    let iconSvg,iconCls='';
+    if(item.status==='done'){
+      iconCls='success';
+      iconSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    }else if(item.status==='error'){
+      iconCls='error';
+      iconSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    }else if(item.status==='processing'){
+      iconSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:orbFloat 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>';
+    }else{
+      iconSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
+    }
+
+    // Meta text
+    let metaText = pdfFormatBytes(item.file.size);
+    if(item.status==='done' && item.unlockedBytes){
+      metaText += ' &rarr; unlocked: '+pdfFormatBytes(item.unlockedBytes.length);
+    }else if(item.status==='processing'){
+      metaText += ' &middot; processing&hellip;';
+    }else if(item.status==='error'){
+      metaText += ' &middot; <strong style="color:var(--red)">'+(item.error||'failed')+'</strong>';
+    }else if(item.status==='needs-password'){
+      metaText += ' &middot; <strong style="color:var(--amber-text)">needs password</strong>';
+    }else if(item.status==='pending'){
+      metaText += ' &middot; pending';
+    }
+
+    // Action buttons
+    let actions='';
+    if(item.status==='done'){
+      actions += '<button class="pdf-item-btn" onclick="pdfDownloadOne(\''+item.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download</button>';
+    }
+    actions += '<button class="pdf-item-btn remove" onclick="pdfRemoveOne(\''+item.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
+
+    div.innerHTML = `
+      <div class="pdf-item-icon ${iconCls}">${iconSvg}</div>
+      <div class="pdf-item-info">
+        <div class="pdf-item-name">${item.file.name}</div>
+        <div class="pdf-item-meta">${metaText}</div>
+      </div>
+      <div class="pdf-item-actions">${actions}</div>
+    `;
+    list.appendChild(div);
+  });
+
+  // Update Download All button
+  const anyDone = pdfFiles.some(f=>f.status==='done');
+  document.getElementById('pdfDownloadAllBtn').disabled = !anyDone;
+  // Unlock All stays enabled as long as there are pending/needs-password items
+  const anyPending = pdfFiles.some(f=>f.status==='pending'||f.status==='needs-password');
+  document.getElementById('pdfUnlockBtn').disabled = !anyPending || pdfIsProcessing;
+}
+
+function pdfRemoveOne(id){
+  pdfFiles = pdfFiles.filter(f=>f.id!==id);
+  pdfRenderList();
+}
+
+function pdfClearAll(){
+  if(pdfIsProcessing){
+    showToast('Busy','Please wait for current processing to finish.','error');
+    return;
+  }
+  pdfFiles=[];
+  pdfRenderList();
+  document.getElementById('pdfProgressWrap').classList.remove('show');
+  document.getElementById('pdfPasswordPrompt').style.display='none';
+  pdfCurrentId=null;
+  pdfFileInput.value='';
+}
+
+// === Progress helpers ===
+function pdfSetProgress(pct, status){
+  document.getElementById('pdfProgressWrap').classList.add('show');
+  document.getElementById('pdfProgressFill').style.width=pct+'%';
+  document.getElementById('pdfProgressPct').textContent=pct+'%';
+  if(status) document.getElementById('pdfProgressStatus').textContent=status;
+}
+
+// === Unlock a single PDF ===
+async function pdfUnlockOne(item, password){
+  const bytes = new Uint8Array(await item.file.arrayBuffer());
+
+  // === PRESERVE MODE (qpdf) ===
+  if(pdfMode==='preserve'){
+    const Module = await pdfLoadQpdf();
+    if(!Module){
+      throw new Error('qpdf not available. Reload the page or switch to Image-based mode.');
+    }
+    const fs = Module.FS;
+    const inputPath='/input-'+item.id+'.pdf';
+    const outputPath='/output-'+item.id+'.pdf';
+
+    try{
+      // Write input to FS
+      fs.writeFile(inputPath, bytes);
+      pdfSetProgress(10, 'Running qpdf --decrypt ('+item.file.name+')');
+
+      // Build args. If password provided, use --password; otherwise pass empty.
+      const args = ['--decrypt'];
+      if(password){
+        args.push('--password='+password);
+      }else{
+        args.push('--password=');
+      }
+      args.push(inputPath, outputPath);
+
+      // Reset args between runs (qpdf keeps state)
+      Module.arguments = [];
+      Module.callMain(args);
+
+      // Check if output exists
+      let outputExists = false;
+      try { fs.stat(outputPath); outputExists = true; } catch(e) {}
+
+      if(!outputExists){
+        // qpdf failed — likely password required
+        // Try to detect: re-run with --show-encryption to check
+        fs.unlink(inputPath);
+        // Mark as needing password (qpdf exit code 2 usually = password issue)
+        item.status='needs-password';
+        item.error=null;
+        throw new Error('NEEDS_PASSWORD');
+      }
+
+      const unlockedBytes = fs.readFile(outputPath);
+      // Clean up
+      try { fs.unlink(inputPath); } catch(e) {}
+      try { fs.unlink(outputPath); } catch(e) {}
+
+      pdfSetProgress(100, 'Done ('+item.file.name+')');
+      item.unlockedBytes = unlockedBytes;
+      item.status = 'done';
+      return unlockedBytes;
+    }catch(err){
+      try { fs.unlink(inputPath); } catch(e) {}
+      try { fs.unlink(outputPath); } catch(e) {}
+      throw err;
+    }
+  }
+
+  // === IMAGE-BASED MODE (pdf.js + pdf-lib) ===
+  // Try loading with provided password (or empty)
+  let pdf;
+  try{
+    const loadingTask = pdfjsLib.getDocument({
+      data: bytes.slice(),
+      password: password || '',
+    });
+    pdf = await loadingTask.promise;
+  }catch(err){
+    // Check if it's a password error
+    if(err && (err.name==='PasswordException' || err.message?.toLowerCase().includes('password'))){
+      // Mark as needing password
+      item.status='needs-password';
+      item.error=null;
+      throw new Error('NEEDS_PASSWORD');
+    }
+    throw new Error('Could not load PDF: '+(err.message||err));
+  }
+
+  // PDF loaded successfully → rebuild without encryption
+  const newPdf = await PDFDocument.create();
+  const scale = 2.0; // 2x for better quality
+
+  for(let i=1; i<=pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    // Convert canvas to PNG, embed
+    const pngBlob = await new Promise(r=>canvas.toBlob(r,'image/png'));
+    const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
+    const pngImage = await newPdf.embedPng(pngBytes);
+
+    // Use original (scale=1) dimensions for the new page
+    const origViewport = page.getViewport({ scale: 1 });
+    const pdfPage = newPdf.addPage([origViewport.width, origViewport.height]);
+    pdfPage.drawImage(pngImage, {
+      x: 0, y: 0,
+      width: origViewport.width,
+      height: origViewport.height,
+    });
+
+    // Update progress (per-page)
+    const pagePct = Math.round((i / pdf.numPages) * 100);
+    pdfSetProgress(pagePct, 'Rendering page '+i+' of '+pdf.numPages+' ('+item.file.name+')');
+  }
+
+  const unlockedBytes = await newPdf.save();
+  item.unlockedBytes = unlockedBytes;
+  item.status = 'done';
+  return unlockedBytes;
+}
+
+// === Unlock All ===
+async function pdfUnlockAll(){
+  if(pdfIsProcessing) return;
+  const pending = pdfFiles.filter(f=>f.status==='pending' || f.status==='needs-password');
+  if(pending.length===0){
+    showToast('Nothing to unlock','Add PDF files first.','error');
+    return;
+  }
+  pdfIsProcessing = true;
+  document.getElementById('pdfUnlockBtn').disabled = true;
+  document.getElementById('pdfUnlockBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:orbFloat 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Unlocking&hellip;';
+
+  let successCount=0, failCount=0, passwordNeededCount=0;
+
+  for(let i=0; i<pending.length; i++){
+    const item = pending[i];
+    item.status = 'processing';
+    pdfRenderList();
+
+    const overallPct = Math.round((i / pending.length) * 100);
+    pdfSetProgress(overallPct, 'Processing '+(i+1)+' of '+pending.length+': '+item.file.name);
+
+    try{
+      await pdfUnlockOne(item, item.password || '');
+      successCount++;
+    }catch(err){
+      if(err.message==='NEEDS_PASSWORD'){
+        passwordNeededCount++;
+        // Show password prompt for this file
+        pdfCurrentId = item.id;
+        document.getElementById('pdfPromptTitle').textContent = 'Password required for: '+item.file.name;
+        document.getElementById('pdfPromptDesc').textContent = 'This PDF is protected with a user password. Enter it below to unlock.';
+        document.getElementById('pdfPasswordPrompt').style.display = 'flex';
+        document.getElementById('pdfPasswordInput').value = '';
+        document.getElementById('pdfPasswordInput').focus();
+        // Pause the loop — user must enter password or skip
+        await pdfWaitForPasswordDecision();
+        // After decision: if user provided password, retry
+        if(item.password){
+          try{
+            item.status='processing';
+            pdfRenderList();
+            await pdfUnlockOne(item, item.password);
+            successCount++;
+          }catch(err2){
+            item.status='error';
+            item.error = err2.message==='NEEDS_PASSWORD' ? 'wrong password' : (err2.message||'failed');
+            failCount++;
+          }
+        }else{
+          // Skipped
+          failCount++;
+        }
+      }else{
+        item.status='error';
+        item.error = err.message || 'failed';
+        failCount++;
+      }
+    }
+    pdfRenderList();
+  }
+
+  pdfSetProgress(100, 'Done');
+  pdfIsProcessing = false;
+  document.getElementById('pdfUnlockBtn').disabled = false;
+  document.getElementById('pdfUnlockBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg> Unlock All';
+
+  let msg;
+  if(successCount>0 && failCount===0){
+    msg = 'All '+successCount+' PDF(s) unlocked successfully!';
+    showToast('Done!',msg,'check');
+  }else if(successCount>0){
+    msg = successCount+' unlocked, '+failCount+' failed';
+    showToast('Partial success',msg,'check');
+  }else{
+    msg = 'No PDFs could be unlocked';
+    showToast('Failed',msg,'error');
+  }
+}
+
+// Helper: returns a Promise that resolves when user enters/skips password
+function pdfWaitForPasswordDecision(){
+  return new Promise(resolve=>{
+    const checkInterval = setInterval(()=>{
+      // Resolve when pdfCurrentId becomes null (user submitted or skipped)
+      if(pdfCurrentId === null){
+        clearInterval(checkInterval);
+        resolve();
+      }
+    }, 200);
+  });
+}
+
+// Password prompt handlers
+window.pdfRetryWithPassword = function(){
+  if(!pdfCurrentId) return;
+  const pwd = document.getElementById('pdfPasswordInput').value;
+  if(!pwd){
+    showToast('Enter password','Please type the password first.','error');
+    return;
+  }
+  const item = pdfFiles.find(f=>f.id===pdfCurrentId);
+  if(item){
+    item.password = pwd;
+  }
+  document.getElementById('pdfPasswordPrompt').style.display='none';
+  pdfCurrentId = null; // signals the waiting loop to continue
+};
+
+window.pdfCancelPassword = function(){
+  // User chose to skip — keep the item as 'needs-password' but mark it errored
+  const item = pdfFiles.find(f=>f.id===pdfCurrentId);
+  if(item){
+    item.status = 'error';
+    item.error = 'skipped (password required)';
+  }
+  document.getElementById('pdfPasswordPrompt').style.display='none';
+  pdfCurrentId = null;
+  pdfRenderList();
+};
+
+// === Download ===
+window.pdfDownloadOne = function(id){
+  const item = pdfFiles.find(f=>f.id===id);
+  if(!item || !item.unlockedBytes){
+    showToast('Not ready','This PDF has not been unlocked yet.','error');
+    return;
+  }
+  const blob = new Blob([item.unlockedBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'unlocked-' + item.file.name.replace(/\.pdf$/i,'') + '.pdf';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Downloaded', a.download, 'check');
+};
+
+window.pdfDownloadAll = function(){
+  const done = pdfFiles.filter(f=>f.status==='done' && f.unlockedBytes);
+  if(done.length===0){
+    showToast('Nothing to download','Unlock some PDFs first.','error');
+    return;
+  }
+  done.forEach((item, i)=>{
+    setTimeout(()=>{
+      window.pdfDownloadOne(item.id);
+    }, i*300); // stagger downloads
+  });
+};
+
+// === Expose for inline onclick handlers ===
+window.pdfUnlockAll = pdfUnlockAll;
+window.pdfClearAll = pdfClearAll;
+window.pdfRemoveOne = pdfRemoveOne;
 </script>
 </body></html>
