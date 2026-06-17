@@ -427,6 +427,7 @@ select{cursor:pointer;appearance:auto}
   background:var(--primary-light);color:var(--primary-text);
 }
 .toast-icon svg{width:14px;height:14px}
+.toast-icon.error{background:rgba(239,68,68,.12);color:var(--red)}
 .toast-body{flex:1}
 .toast-title{font-weight:700;font-size:13px}
 .toast-desc{color:var(--muted);font-size:12px;margin-top:2px}
@@ -474,10 +475,80 @@ select{cursor:pointer;appearance:auto}
 #panel-ocr .dropzone-desc{font-size:12px;color:var(--muted);line-height:1.5}
 #panel-ocr .dropzone-desc strong{color:var(--primary-text)}
 #panel-ocr .dropzone input{display:none}
+#panel-ocr .paste-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;flex-wrap:wrap;
+  margin-top:10px;margin-bottom:4px;
+}
+#panel-ocr .paste-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:10px;
+  border:1.5px dashed var(--border);
+  background:var(--surface-solid);
+  color:var(--text);font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+}
+#panel-ocr .paste-btn:hover{
+  border-color:var(--primary);border-style:solid;
+  background:var(--primary-light);color:var(--primary-text);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px var(--primary-glow);
+}
+#panel-ocr .paste-btn svg{width:15px;height:15px}
+#panel-ocr .paste-hint{font-size:11px;color:var(--muted)}
+#panel-ocr .paste-hint kbd{
+  display:inline-block;
+  padding:1px 6px;margin:0 1px;
+  border:1px solid var(--border);border-bottom-width:2px;
+  border-radius:5px;
+  background:var(--surface-solid);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px;font-weight:600;color:var(--text);
+}
 #panel-ocr .preview-wrap{margin-top:16px;position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-solid);display:none}
 #panel-ocr .preview-wrap.show{display:block;animation:panelIn .35s ease}
-#panel-ocr .preview-wrap img{display:block;width:100%;max-height:340px;object-fit:contain;background:repeating-conic-gradient(#e2e8f0 0% 25%,#fff 0% 50%) 50%/16px 16px}
-#panel-ocr .preview-remove{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:8px;border:none;background:rgba(15,23,42,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);backdrop-filter:blur(8px)}
+#panel-ocr .preview-stage{display:flex;justify-content:center;align-items:center;padding:8px;background:repeating-conic-gradient(#e2e8f0 0% 25%,#fff 0% 50%) 50%/16px 16px;min-height:80px}
+body.dark #panel-ocr .preview-stage{background:repeating-conic-gradient(#1e2d4a 0% 25%,#162040 0% 50%) 50%/16px 16px}
+#panel-ocr .preview-img-wrap{position:relative;display:inline-block;max-width:100%;line-height:0}
+#panel-ocr .preview-img-wrap img{display:block;max-width:100%;max-height:340px;width:auto;height:auto}
+#panel-ocr .lens-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#panel-ocr .lens-word{
+  position:absolute;
+  border:1.5px solid rgba(16,185,129,.7);
+  background:rgba(16,185,129,.14);
+  cursor:pointer;
+  pointer-events:auto;
+  transition:background .15s,border-color .15s,transform .15s,box-shadow .15s;
+  border-radius:3px;
+  box-sizing:border-box;
+  line-height:1;
+}
+#panel-ocr .lens-word:hover{
+  background:rgba(245,158,11,.45);
+  border-color:#f59e0b;
+  z-index:5;
+  transform:scale(1.04);
+  box-shadow:0 4px 12px rgba(245,158,11,.35);
+}
+#panel-ocr .lens-word.selected{
+  background:rgba(16,185,129,.45);
+  border-color:#059669;
+  z-index:4;
+}
+#panel-ocr .lens-word.copied{animation:ocrLensFlash .6s ease}
+@keyframes ocrLensFlash{
+  0%,100%{background:rgba(16,185,129,.14);transform:scale(1)}
+  50%{background:rgba(16,185,129,.85);transform:scale(1.08);box-shadow:0 0 20px rgba(16,185,129,.6)}
+}
+#panel-ocr .lens-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+  padding:10px 14px;border-top:1px solid var(--border);
+  background:var(--surface-solid);
+}
+#panel-ocr .lens-hint{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+#panel-ocr .lens-hint svg{width:14px;height:14px;color:var(--primary-text)}
+#panel-ocr .preview-remove{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:8px;border:none;background:rgba(15,23,42,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);backdrop-filter:blur(8px);z-index:10}
 #panel-ocr .preview-remove:hover{background:rgba(239,68,68,.9);transform:rotate(90deg)}
 #panel-ocr .preview-remove svg{width:16px;height:16px}
 #panel-ocr .preview-meta{padding:10px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
@@ -734,14 +805,42 @@ select{cursor:pointer;appearance:auto}
         <input type="file" id="ocrFileInput" accept="image/png,image/jpeg,image/jfif,.jfif,.jpg,.jpeg,image/webp,image/bmp,image/gif">
       </div>
 
+      <!-- Paste button: visible alternative to keyboard Ctrl+V -->
+      <div class="paste-row">
+        <button type="button" class="btn btn-outline paste-btn" onclick="ocrPasteFromClipboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          Paste from Clipboard
+        </button>
+        <span class="paste-hint">or just press <kbd>Ctrl</kbd>+<kbd>V</kbd> / <kbd>&#8984;</kbd>+<kbd>V</kbd></span>
+      </div>
+
       <div class="preview-wrap" id="ocrPreviewWrap">
-        <img id="ocrPreviewImg" alt="Preview">
+        <div class="preview-stage">
+          <div class="preview-img-wrap">
+            <img id="ocrPreviewImg" alt="Preview">
+            <div class="lens-overlay" id="ocrLensOverlay"></div>
+          </div>
+        </div>
         <button class="preview-remove" onclick="ocrClearImage()" title="Remove image">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
         <div class="preview-meta">
           <span><strong id="ocrPreviewName">image.png</strong></span>
           <span><span id="ocrPreviewSize">0 KB</span> &middot; <span id="ocrPreviewDim">&mdash;</span></span>
+        </div>
+        <div class="lens-toolbar" id="ocrLensToolbar" style="display:none">
+          <span class="lens-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-6 0v4"></path><rect x="2" y="9" width="20" height="12" rx="2" ry="2"></rect></svg>
+            Click any highlighted word to copy it
+          </span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrSelectAllWords()">Select All</button>
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrCopyAllWords()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Copy All
+            </button>
+            <button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="ocrToggleBoxes()" id="ocrToggleBoxesBtn">Hide Boxes</button>
+          </div>
         </div>
       </div>
 
@@ -825,8 +924,16 @@ function switchTab(tab){
 function showToast(title,desc,icon){
   const c=document.getElementById('toasts');
   const t=document.createElement('div');t.className='toast';
-  const svg=icon==='check'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
-  t.innerHTML=`<div class="toast-icon">${svg}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div>`;
+  let svg,iconCls='';
+  if(icon==='check'){
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  }else if(icon==='error'){
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    iconCls=' error';
+  }else{
+    svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+  }
+  t.innerHTML=`<div class="toast-icon${iconCls}">${svg}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div>`;
   c.appendChild(t);
   setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),250)},2800);
 }
@@ -1520,6 +1627,10 @@ let ocrCurrentImage=null;
 let ocrOutputMode='standard';
 let ocrPreprocess='auto';
 let ocrIsRunning=false;
+// Lens mode state
+let ocrWords=[];              // [{text, bbox:{x0,y0,x1,y1}, confidence}, ...]
+let ocrImageW=0, ocrImageH=0; // original image dimensions (from Tesseract)
+let ocrBoxesVisible=true;     // toggle for word boxes
 
 (function ocrInit(){
   document.querySelectorAll('[data-ocr-mode]').forEach(chip=>{
@@ -1596,6 +1707,42 @@ function ocrHandleFile(file){
   reader.readAsDataURL(file);
 }
 
+// Paste image from clipboard (triggered by the visible Paste button).
+// Uses the async Clipboard API. Falls back to a graceful toast if the
+// browser doesn't support clipboard image reads or the clipboard has no image.
+async function ocrPasteFromClipboard(){
+  // Feature detection
+  if(!navigator.clipboard || !navigator.clipboard.read){
+    showToast('Not supported','Your browser does not support clipboard image reads. Please use Ctrl+V instead, or upload the image.','error');
+    return;
+  }
+  showToast('Reading clipboard','Looking for an image in your clipboard\u2026','info');
+  try{
+    const items=await navigator.clipboard.read();
+    for(const item of items){
+      // Find the first image type the clipboard item supports
+      const imageType=item.types.find(t=>t.indexOf('image/')===0);
+      if(imageType){
+        const blob=await item.getType(imageType);
+        // Build a friendly filename with extension based on MIME
+        const ext=imageType.split('/')[1] || 'png';
+        const filename='pasted-image-'+Date.now()+'.'+ext;
+        const file=new File([blob],filename,{type:imageType});
+        ocrHandleFile(file);
+        return;
+      }
+    }
+    showToast('No image found','Your clipboard does not contain an image. Copy an image first (screenshot or right-click > Copy image).','error');
+  }catch(err){
+    console.warn('Clipboard read failed:',err);
+    // Most common cause: user denied permission or page not focused
+    const msg=err && err.name==='NotAllowedError'
+      ? 'Permission denied. Please click the page first, then try again, or use Ctrl+V.'
+      : 'Could not read clipboard. Try Ctrl+V instead, or upload the image.';
+    showToast('Paste failed',msg,'error');
+  }
+}
+
 function ocrFormatBytes(b){
   if(b<1024) return b+' B';
   if(b<1024*1024) return (b/1024).toFixed(1)+' KB';
@@ -1620,6 +1767,16 @@ function ocrClearAll(){
   document.getElementById('ocrLines').textContent='0';
   document.getElementById('ocrConfidence').style.display='none';
   document.getElementById('ocrTime').style.display='none';
+  // Clear Lens overlay
+  ocrWords=[];
+  ocrImageW=0; ocrImageH=0;
+  const overlay=document.getElementById('ocrLensOverlay');
+  if(overlay) overlay.innerHTML='';
+  const toolbar=document.getElementById('ocrLensToolbar');
+  if(toolbar) toolbar.style.display='none';
+  ocrBoxesVisible=true;
+  const toggleBtn=document.getElementById('ocrToggleBoxesBtn');
+  if(toggleBtn) toggleBtn.textContent='Hide Boxes';
 }
 
 function ocrPreprocessImage(dataUrl,mode){
@@ -1720,6 +1877,15 @@ async function ocrRun(){
     document.getElementById('ocrDownloadBtn').disabled=false;
     document.getElementById('ocrProgressStatus').textContent='Done \u2713';
     showToast('Extraction complete',confidence!==null?'Extracted '+text.length+' characters with '+confidence+'% confidence.':'Extraction complete.','check');
+
+    // === Lens Mode: render word boxes overlay ===
+    try{
+      const words=result.data.words||[];
+      if(words.length>0){
+        ocrRenderLensBoxes(words, result.data.imageWidth, result.data.imageHeight);
+        document.getElementById('ocrLensToolbar').style.display='flex';
+      }
+    }catch(lensErr){console.warn('Lens overlay failed:',lensErr)}
   }catch(err){
     console.error(err);
     showToast('OCR failed',err.message||'Could not extract text from this image.','error');
@@ -1758,6 +1924,98 @@ function ocrDownload(){
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showToast('Downloaded','Text file saved to your device.','check');
+}
+
+/* ===== Lens Mode helpers ===== */
+
+// Render bounding boxes for each detected word over the image.
+// Words are positioned using percentages so the overlay stays correct
+// when the preview is resized (responsive).
+function ocrRenderLensBoxes(words, imgW, imgH){
+  ocrWords=words.filter(w=>w&&w.text&&w.text.trim()&&w.bbox);
+  ocrImageW=imgW||0;
+  ocrImageH=imgH||0;
+  const overlay=document.getElementById('ocrLensOverlay');
+  overlay.innerHTML='';
+
+  // If Tesseract didn't report image dimensions, fall back to the <img> natural size.
+  if(!ocrImageW||!ocrImageH){
+    const img=document.getElementById('ocrPreviewImg');
+    ocrImageW=img.naturalWidth||1;
+    ocrImageH=img.naturalHeight||1;
+  }
+
+  ocrWords.forEach((w,i)=>{
+    const b=w.bbox;
+    const leftPct=(b.x0/ocrImageW)*100;
+    const topPct=(b.y0/ocrImageH)*100;
+    const wPct=((b.x1-b.x0)/ocrImageW)*100;
+    const hPct=((b.y1-b.y0)/ocrImageH)*100;
+    if(wPct<=0||hPct<=0) return;
+
+    const box=document.createElement('div');
+    box.className='lens-word';
+    box.style.left=leftPct+'%';
+    box.style.top=topPct+'%';
+    box.style.width=wPct+'%';
+    box.style.height=hPct+'%';
+    box.dataset.idx=i;
+    box.title='Click to copy: '+w.text;
+    box.addEventListener('click',function(e){
+      e.stopPropagation();
+      ocrCopyWord(i);
+    });
+    overlay.appendChild(box);
+  });
+
+  ocrBoxesVisible=true;
+  const toggleBtn=document.getElementById('ocrToggleBoxesBtn');
+  if(toggleBtn) toggleBtn.textContent='Hide Boxes';
+}
+
+// Copy a single word by index
+async function ocrCopyWord(idx){
+  const w=ocrWords[idx];
+  if(!w) return;
+  const ok=await copyToClipboard(w.text);
+  const boxes=document.querySelectorAll('#ocrLensOverlay .lens-word');
+  const box=boxes[idx];
+  if(box){
+    box.classList.remove('copied');
+    void box.offsetWidth; // restart animation
+    box.classList.add('copied');
+  }
+  if(ok) showToast('Copied', '"'+w.text+'" copied to clipboard','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+// Select-all: highlight every box + copy full text
+async function ocrSelectAllWords(){
+  if(ocrWords.length===0){showToast('No words','Extract text first.','error');return}
+  const boxes=document.querySelectorAll('#ocrLensOverlay .lens-word');
+  boxes.forEach(b=>b.classList.add('selected'));
+  setTimeout(()=>boxes.forEach(b=>b.classList.remove('selected')),1500);
+  const text=ocrWords.map(w=>w.text).join(' ');
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('All words copied', ocrWords.length+' words copied to clipboard','check');
+}
+
+// Copy-all: copy full text (same as ocrCopy but triggered from Lens toolbar)
+async function ocrCopyAllWords(){
+  const text=document.getElementById('ocrResult').value;
+  if(!text){showToast('Nothing to copy','Extract some text first.','error');return}
+  const ok=await copyToClipboard(text);
+  if(ok) showToast('Copied','Full text copied to clipboard.','check');
+  else showToast('Copy failed','Could not copy to clipboard.','error');
+}
+
+// Toggle visibility of word boxes (keeps data so user can re-show)
+function ocrToggleBoxes(){
+  const overlay=document.getElementById('ocrLensOverlay');
+  const btn=document.getElementById('ocrToggleBoxesBtn');
+  ocrBoxesVisible=!ocrBoxesVisible;
+  overlay.style.display=ocrBoxesVisible?'block':'none';
+  btn.textContent=ocrBoxesVisible?'Hide Boxes':'Show Boxes';
 }
 </script>
 </body></html>
